@@ -21,7 +21,7 @@ app.prepare().then(() => {
   });
 
   server.get('/contratos/:slug', (req, res) => {
-    return app.render(req, res, '/contratos', { slug: req.params.slug });
+    return app.render(req, res, '/contrato', { slug: req.params.slug });
   });
 
   server.get('*', (req, res) => {
