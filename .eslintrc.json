@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "prettier/react",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "prefer-let",
+    "react"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 9,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "commonjs": true
+  },
+  "globals": {
+    "process": true
+  },
+  "rules": {
+    "prefer-const": "off",
+    "prefer-let/prefer-let": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
