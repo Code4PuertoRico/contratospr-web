@@ -1,59 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
 import Head from '../components/head';
 import ContractsChart from '../components/contracts-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
-
-async function fetchData({ slug }) {
-  let entity = await (await fetch(
-    `${process.env.API_URL}/entities/${slug}/`
-  )).json();
-
-  // TODO: Handle pagination
-  let contractors = await (await fetch(
-    `${process.env.API_URL}/contractors/?entity=${entity.id}`
-  )).json();
-
-  // TODO: Handle pagination
-  let contracts = await (await fetch(
-    `${process.env.API_URL}/contracts/?entity=${entity.id}`
-  )).json();
-
-  return {
-    entity,
-    contractors: contractors.results,
-    contracts: contracts.results
-  };
-}
-
-function getChartData(contracts) {
-  let chartData = [];
-  let groups = {};
-
-  for (let contract of contracts) {
-    if (!groups[contract.date_of_grant]) {
-      groups[contract.date_of_grant] = [];
-    }
-    groups[contract.date_of_grant].push(parseFloat(contract.amount_to_pay));
-  }
-
-  for (let [date, amounts] of Object.entries(groups)) {
-    chartData.push({
-      x: date,
-      y: amounts.reduce((total, amount) => total + amount),
-      contracts: amounts.length
-    });
-  }
-
-  return chartData;
-}
+import { getEntity, getChartData } from '../lib/api';
 
 class Entidades extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    return fetchData({ slug });
+    return getEntity({ slug });
   }
 
   constructor(props) {

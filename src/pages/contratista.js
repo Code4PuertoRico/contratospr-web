@@ -1,65 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
 import Head from '../components/head';
 import ContractsChart from '../components/contracts-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
-
-async function fetchData({ slug }) {
-  let contractor = await (await fetch(
-    `${process.env.API_URL}/contractors/${slug}/`
-  )).json();
-
-  // TODO: Handle pagination
-  let entities = await (await fetch(
-    `${process.env.API_URL}/entities/?contractor=${contractor.id}`
-  )).json();
-
-  // TODO: Handle pagination
-  let services = await (await fetch(
-    `${process.env.API_URL}/services/?contractor=${contractor.id}`
-  )).json();
-
-  // TODO: Handle pagination
-  let contracts = await (await fetch(
-    `${process.env.API_URL}/contracts/?contractor=${contractor.id}`
-  )).json();
-
-  return {
-    contractor,
-    entities: entities.results,
-    services: services.results,
-    contracts: contracts.results
-  };
-}
-
-function getChartData(contracts) {
-  let chartData = [];
-  let groups = {};
-
-  for (let contract of contracts) {
-    if (!groups[contract.date_of_grant]) {
-      groups[contract.date_of_grant] = [];
-    }
-    groups[contract.date_of_grant].push(parseFloat(contract.amount_to_pay));
-  }
-
-  for (let [date, amounts] of Object.entries(groups)) {
-    chartData.push({
-      x: date,
-      y: amounts.reduce((total, amount) => total + amount),
-      contracts: amounts.length
-    });
-  }
-
-  return chartData;
-}
+import { getContractor, getChartData } from '../lib/api';
 
 class Contratistas extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    let data = await fetchData({ slug });
+    let data = await getContractor({ slug });
     return data;
   }
 

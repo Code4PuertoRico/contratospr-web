@@ -1,22 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import fetch from 'isomorphic-unfetch';
-import intcomma from '../lib/intcomma';
-import millify from '../lib/millify';
 import Head from '../components/head';
 import Search from '../components/search';
 import Pagination from '../components/pagination';
+import intcomma from '../lib/intcomma';
+import millify from '../lib/millify';
+import { searchContracts } from '../lib/api';
 
 const PAGE_SIZE = 12;
-
-async function fetchData({ query, page }) {
-  return await (await fetch(
-    `${
-      process.env.API_URL
-    }/contracts/?search=${query}&page=${page}&page_size=${PAGE_SIZE}`
-  )).json();
-}
 
 class Buscar extends React.Component {
   static async getInitialProps({ query }) {
@@ -27,7 +19,13 @@ class Buscar extends React.Component {
     }
 
     let page = (query.page && parseInt(query.page, 10)) || 1;
-    let data = await fetchData({ query: searchQuery, page });
+
+    let data = await searchContracts({
+      query: searchQuery,
+      page,
+      pageSize: PAGE_SIZE
+    });
+
     return Object.assign({ query: searchQuery, page }, data);
   }
 

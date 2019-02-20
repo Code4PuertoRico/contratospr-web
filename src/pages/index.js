@@ -1,25 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import fetch from 'isomorphic-unfetch';
-import millify from '../lib/millify';
-import intcomma from '../lib/intcomma';
 import Head from '../components/head';
 import Search from '../components/search';
-
-async function fetchData(fiscalYear) {
-  let url = `${process.env.API_URL}/pages/home`;
-
-  if (fiscalYear) {
-    url = `${url}?fiscal_year=${fiscalYear}`;
-  }
-
-  return (await fetch(url)).json();
-}
+import millify from '../lib/millify';
+import intcomma from '../lib/intcomma';
+import { getHome } from '../lib/api';
 
 class Index extends React.Component {
   static async getInitialProps() {
-    return fetchData();
+    return getHome({
+      fiscalYear: null
+    });
   }
 
   constructor(props) {
@@ -37,7 +29,7 @@ class Index extends React.Component {
       };
     });
 
-    let data = await fetchData(value);
+    let data = await getHome({ fiscalYear: value });
 
     this.setState(data);
   };

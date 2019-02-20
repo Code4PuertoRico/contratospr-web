@@ -1,24 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
 import Head from '../components/head';
 import linebreaksbr from '../lib/linebreaksbr';
-
-async function fetchData({ slug }) {
-  let url = `${process.env.API_URL}/contracts/${slug}/`;
-  let contract = await (await fetch(url)).json();
-
-  if (contract.document) {
-    contract.document = await (await fetch(contract.document)).json();
-  }
-
-  return contract;
-}
+import { getContract } from '../lib/api';
 
 class Contratos extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    let data = await fetchData({ slug });
+    let data = await getContract({ slug });
     return data;
   }
 
