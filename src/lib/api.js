@@ -111,3 +111,13 @@ export function searchEntities({ query, page, pageSize }) {
   let url = `${API_URL}/entities/?search=${query}&page=${page}&page_size=${pageSize}`;
   return fetchData(url);
 }
+
+export function getGeneralTrends() {
+  let url = `${API_URL}/pages/trends/general/`;
+  return fetchData(url);
+}
+
+export function getServiceTrends() {
+  let url = `${API_URL}/pages/trends/services/`;
+  return fetchData(url);
+}

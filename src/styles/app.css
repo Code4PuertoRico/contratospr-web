@@ -60,3 +60,8 @@
   * @import "utilities/background-patterns";
   * @import "utilities/skew-transforms";
   */
+
+  .trends-services-max-h {
+    max-height: 10rem;
+    overflow-y: auto;
+  }
