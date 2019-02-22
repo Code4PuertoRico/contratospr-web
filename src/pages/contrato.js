@@ -123,7 +123,7 @@ class Contratos extends React.Component {
                   ) : null}
                 </div>
                 <div className="sm:overflow-y-scroll sm:max-h-screen mt-2 border-t border-b">
-                  {this.props.document ? (
+                  {this.props.document && this.props.document.pages ? (
                     <>
                       {this.props.document.pages.map((page) => (
                         <p
