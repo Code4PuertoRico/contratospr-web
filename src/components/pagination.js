@@ -5,59 +5,48 @@ function getPageRange(size) {
   return [...Array(size).keys()].map((i) => i + 1);
 }
 
-class Pagination extends React.Component {
+class Pagination extends React.PureComponent {
   static propTypes = {
-    page: PropTypes.number,
-    pages: PropTypes.number,
-    onPageChange: PropTypes.func
+    page: PropTypes.number.isRequired,
+    pages: PropTypes.number.isRequired,
+    onPageChange: PropTypes.func.isRequired
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: props.page,
-      pages: props.pages,
-      onPageChange: props.onPageChange
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.page !== prevProps.page ||
-      this.props.pages !== prevProps.pages
-    ) {
-      this.setState({
-        page: this.props.page,
-        pages: this.props.pages
-      });
-    }
-  }
 
   handlePageChange = (e, { page }) => {
     e.preventDefault();
-    this.setState({ page });
-    this.state.onPageChange({ page });
+    this.props.onPageChange({ page });
   };
 
+  showCurrentPage(page) {
+    return this.props.page === page;
+  }
+
+  showAdjacentPage(page) {
+    return page > this.props.page - 3 && page < this.props.page + 3;
+  }
+
   render() {
+    let showPrevious = this.props.page > 1;
+    let showNext = this.props.page < this.props.pages;
+
     return (
-      <React.Fragment>
-        {this.state.page > 1 ? (
+      <>
+        {showPrevious ? (
           <a
             href="#"
             className="no-underline text-blue hover:text-blue-darker mr-2"
             onClick={(e) =>
-              this.handlePageChange(e, { page: this.state.page - 1 })
+              this.handlePageChange(e, { page: this.props.page - 1 })
             }>
             &larr; anterior
           </a>
         ) : null}
 
-        {getPageRange(this.state.pages).map((page) => (
+        {getPageRange(this.props.pages).map((page) => (
           <React.Fragment key={page.toString()}>
-            {this.state.page == page ? (
+            {this.showCurrentPage(page) ? (
               <span className="font-bold text-blue-darker mr-2">{page}</span>
-            ) : page > this.state.page - 3 && page < this.state.page + 3 ? (
+            ) : this.showAdjacentPage(page) ? (
               <a
                 href="#"
                 className="no-underline text-blue hover:text-blue-darker mr-2"
@@ -68,17 +57,17 @@ class Pagination extends React.Component {
           </React.Fragment>
         ))}
 
-        {this.state.page < this.state.pages ? (
+        {showNext ? (
           <a
             href="#"
             className="no-underline text-blue hover:text-blue-darker"
             onClick={(e) =>
-              this.handlePageChange(e, { page: this.state.page + 1 })
+              this.handlePageChange(e, { page: this.props.page + 1 })
             }>
             siguiente &rarr;
           </a>
         ) : null}
-      </React.Fragment>
+      </>
     );
   }
 }

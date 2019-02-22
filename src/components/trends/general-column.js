@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import intcomma from '../../lib/intcomma';
 
 const TrendsGeneralColumn = (props) => (
@@ -9,7 +10,9 @@ const TrendsGeneralColumn = (props) => (
     </h3>
     <div className="flex sm:h-32 p-2 border-b border-grey-light hover:bg-grey-lightest">
       <div className="flex-1 self-center">
-        <Link href={`/contratos/${props.contract_min_amount.slug}`}>
+        <Link
+          href={`/contrato?slug=${props.contract_min_amount.slug}`}
+          as={`/contratos/${props.contract_min_amount.slug}`}>
           <a className="text-grey-darkest hover:text-black no-underline">
             <div className="font-bold text-grey-darkest">
               Contrato con Menor Monto
@@ -26,7 +29,9 @@ const TrendsGeneralColumn = (props) => (
     </div>
     <div className="flex sm:h-32 p-2 border-b border-grey-light hover:bg-grey-lightest">
       <div className="flex-1 self-center">
-        <Link href={`/contratos/${props.contract_max_amount.slug}`}>
+        <Link
+          href={`/contrato?slug=${props.contract_max_amount.slug}`}
+          as={`/contratos/${props.contract_max_amount.slug}`}>
           <a className="text-grey-darkest hover:text-black no-underline">
             <div className="font-bold text-grey-darkest">
               Contrato con Mayor Monto
@@ -53,5 +58,12 @@ const TrendsGeneralColumn = (props) => (
     ))}
   </div>
 );
+
+TrendsGeneralColumn.propTypes = {
+  fiscal_year: PropTypes.number,
+  totals: PropTypes.array,
+  contract_max_amount: PropTypes.object,
+  contract_min_amount: PropTypes.object
+};
 
 export default TrendsGeneralColumn;

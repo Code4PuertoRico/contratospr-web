@@ -8,7 +8,30 @@ const DEFAULT_POINT_RADIUS = 3;
 const SELECTED_POINT_BG_COLOR = 'rgba(52, 144, 220, 1)';
 const SELECTED_POINT_RADIUS = 5;
 
-function ContractsChart({ height, data }) {
+export function getChartData(contracts) {
+  let chartData = [];
+  let groups = {};
+
+  for (let contract of contracts) {
+    if (!groups[contract.date_of_grant]) {
+      groups[contract.date_of_grant] = [];
+    }
+    groups[contract.date_of_grant].push(parseFloat(contract.amount_to_pay));
+  }
+
+  for (let [date, amounts] of Object.entries(groups)) {
+    chartData.push({
+      x: date,
+      y: amounts.reduce((total, amount) => total + amount),
+      contracts: amounts.length
+    });
+  }
+
+  return chartData;
+}
+
+function ContractsChart({ height, contracts }) {
+  let data = getChartData(contracts);
   let chartData = {
     datasets: [
       {
@@ -108,7 +131,7 @@ function ContractsChart({ height, data }) {
 }
 
 ContractsChart.propTypes = {
-  data: PropTypes.array,
+  contracts: PropTypes.array,
   height: PropTypes.number
 };
 

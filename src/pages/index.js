@@ -8,30 +8,14 @@ import intcomma from '../lib/intcomma';
 import { getHome } from '../lib/api';
 
 class Index extends React.Component {
-  static async getInitialProps() {
+  static async getInitialProps({ query }) {
     return getHome({
-      fiscalYear: null
+      fiscalYear: query.fy || null
     });
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = Object.assign({}, props);
   }
 
   handleChangeFiscalYear = async (value) => {
-    this.setState((state) => {
-      return {
-        fiscal_year: {
-          ...state.fiscal_year,
-          current: parseInt(value, 10)
-        }
-      };
-    });
-
-    let data = await getHome({ fiscalYear: value });
-
-    this.setState(data);
+    Router.push(`/?fy=${value}`);
   };
 
   handleSubmit = async ({ query }) => {
@@ -51,9 +35,9 @@ class Index extends React.Component {
               <div className="inline-block relative">
                 <select
                   className="block text-lg appearance-none w-full bg-white border-b border-grey-light hover:border-grey px-2 pr-6 rounded-none focus:outline-none focus:shadow-outline"
-                  value={this.state.fiscal_year.current}
+                  value={this.props.fiscal_year.current}
                   onChange={(e) => this.handleChangeFiscalYear(e.target.value)}>
-                  {this.state.fiscal_year.choices.map((choice) => (
+                  {this.props.fiscal_year.choices.map((choice) => (
                     <option value={choice} key={choice.toString()}>
                       {choice}
                     </option>
@@ -71,11 +55,11 @@ class Index extends React.Component {
             </div>
             se otorgaron{' '}
             <span className="font-bold text-grey-darkest">
-              {intcomma(this.state.contracts_count)}
+              {intcomma(this.props.contracts_count)}
             </span>{' '}
             contratos por un total de{' '}
             <span className="font-bold text-grey-darkest">
-              ${millify(this.state.contracts_total)}
+              ${millify(this.props.contracts_total)}
             </span>
             .
           </div>
@@ -96,7 +80,7 @@ class Index extends React.Component {
               <h3 className="p-2 text-center border-b border-grey-light">
                 Contratos
               </h3>
-              {this.state.recent_contracts.map((contract) => (
+              {this.props.recent_contracts.map((contract) => (
                 <Link
                   href={`/contrato?slug=${contract.slug}`}
                   as={`/contratos/${contract.slug}`}
@@ -124,7 +108,7 @@ class Index extends React.Component {
               <h3 className="p-2 text-center border-b border-grey-light">
                 Contratistas
               </h3>
-              {this.state.contractors.map((contractor) => (
+              {this.props.contractors.map((contractor) => (
                 <Link
                   href={`/contratista?slug=${contractor.slug}`}
                   as={`/contratistas/${contractor.slug}`}
@@ -149,7 +133,7 @@ class Index extends React.Component {
               <h3 className="p-2 text-center border-b border-grey-light">
                 Entidades
               </h3>
-              {this.state.entities.map((entity) => (
+              {this.props.entities.map((entity) => (
                 <Link
                   href={`/entidad?slug=${entity.slug}`}
                   as={`/entidades/${entity.slug}`}

@@ -1,45 +1,55 @@
+import queryString from 'query-string';
 import fetch from 'isomorphic-unfetch';
+import { ResponseError } from '../lib/errors';
 
 const API_URL = process.env.API_URL;
 
-async function fetchData(url) {
-  return (await fetch(url)).json();
+async function fetchData(url, params = {}) {
+  let res = await fetch(`${url}?${queryString.stringify(params)}`);
+  let errorCode = res.status > 200 ? res.status : null;
+
+  if (errorCode) {
+    throw new ResponseError({
+      statusCode: errorCode,
+      statusText: res.statusText
+    });
+  }
+
+  return res.json();
 }
 
 export function getHome({ fiscalYear }) {
   let url = `${API_URL}/pages/home`;
 
   if (fiscalYear) {
-    url = `${url}?fiscal_year=${fiscalYear}`;
+    return fetchData(url, { fiscal_year: fiscalYear });
   }
 
   return fetchData(url);
 }
 
 export function searchContracts({ query, page, pageSize }) {
-  let url = `${API_URL}/contracts/?search=${query}&page=${page}&page_size=${pageSize}`;
-  return fetchData(url);
+  let url = `${API_URL}/contracts/`;
+  return fetchData(url, { search: query, page, page_size: pageSize });
 }
 
 export async function getContractor({ slug }) {
-  let contractor = await (await fetch(
-    `${API_URL}/contractors/${slug}/`
-  )).json();
+  let contractor = await fetchData(`${API_URL}/contractors/${slug}/`);
 
   // TODO: Handle pagination
-  let entities = await (await fetch(
-    `${API_URL}/entities/?contractor=${contractor.id}`
-  )).json();
+  let entities = await fetchData(`${API_URL}/entities/`, {
+    contractor: contractor.id
+  });
 
   // TODO: Handle pagination
-  let services = await (await fetch(
-    `${API_URL}/services/?contractor=${contractor.id}`
-  )).json();
+  let services = await fetchData(`${API_URL}/services/`, {
+    contractor: contractor.id
+  });
 
   // TODO: Handle pagination
-  let contracts = await (await fetch(
-    `${API_URL}/contracts/?contractor=${contractor.id}`
-  )).json();
+  let contracts = await fetchData(`${API_URL}/contracts/`, {
+    contractor: contractor.id
+  });
 
   return {
     contractor,
@@ -49,56 +59,36 @@ export async function getContractor({ slug }) {
   };
 }
 
-export function getChartData(contracts) {
-  let chartData = [];
-  let groups = {};
-
-  for (let contract of contracts) {
-    if (!groups[contract.date_of_grant]) {
-      groups[contract.date_of_grant] = [];
-    }
-    groups[contract.date_of_grant].push(parseFloat(contract.amount_to_pay));
-  }
-
-  for (let [date, amounts] of Object.entries(groups)) {
-    chartData.push({
-      x: date,
-      y: amounts.reduce((total, amount) => total + amount),
-      contracts: amounts.length
-    });
-  }
-
-  return chartData;
-}
-
 export async function searchContractors({ query, page, pageSize }) {
-  let url = `${API_URL}/contractors/?search=${query}&page=${page}&page_size=${pageSize}`;
-  return fetchData(url);
+  return fetchData(`${API_URL}/contractors/`, {
+    search: query,
+    page,
+    page_size: pageSize
+  });
 }
 
 export async function getContract({ slug }) {
-  let url = `${API_URL}/contracts/${slug}/`;
-  let contract = await (await fetch(url)).json();
+  let contract = await fetchData(`${API_URL}/contracts/${slug}/`);
 
   if (contract.document) {
-    contract.document = await (await fetch(contract.document)).json();
+    contract.document = await fetchData(contract.document);
   }
 
   return contract;
 }
 
 export async function getEntity({ slug }) {
-  let entity = await (await fetch(`${API_URL}/entities/${slug}/`)).json();
+  let entity = await fetchData(`${API_URL}/entities/${slug}/`);
 
   // TODO: Handle pagination
-  let contractors = await (await fetch(
-    `${API_URL}/contractors/?entity=${entity.id}`
-  )).json();
+  let contractors = await fetchData(`${API_URL}/contractors/`, {
+    entity: entity.id
+  });
 
   // TODO: Handle pagination
-  let contracts = await (await fetch(
-    `${API_URL}/contracts/?entity=${entity.id}`
-  )).json();
+  let contracts = await fetchData(`${API_URL}/contracts/`, {
+    entity: entity.id
+  });
 
   return {
     entity,
@@ -108,16 +98,17 @@ export async function getEntity({ slug }) {
 }
 
 export function searchEntities({ query, page, pageSize }) {
-  let url = `${API_URL}/entities/?search=${query}&page=${page}&page_size=${pageSize}`;
-  return fetchData(url);
+  return fetchData(`${API_URL}/entities/`, {
+    search: query,
+    page,
+    page_size: pageSize
+  });
 }
 
 export function getGeneralTrends() {
-  let url = `${API_URL}/pages/trends/general/`;
-  return fetchData(url);
+  return fetchData(`${API_URL}/pages/trends/general/`);
 }
 
 export function getServiceTrends() {
-  let url = `${API_URL}/pages/trends/services/`;
-  return fetchData(url);
+  return fetchData(`${API_URL}/pages/trends/services/`);
 }

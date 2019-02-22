@@ -15,7 +15,13 @@ class Buscar extends React.Component {
     let searchQuery = query.q;
 
     if (!searchQuery) {
-      return {};
+      return {
+        query: '',
+        page: 1,
+        count: 0,
+        totalPages: 1,
+        results: []
+      };
     }
 
     let page = (query.page && parseInt(query.page, 10)) || 1;
@@ -26,18 +32,12 @@ class Buscar extends React.Component {
       pageSize: PAGE_SIZE
     });
 
-    return Object.assign({ query: searchQuery, page }, data);
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      query: props.query || '',
-      page: props.page || 1,
-      count: props.count || 0,
-      total_pages: props.total_pages || 1,
-      results: props.results || []
+    return {
+      query: searchQuery,
+      page,
+      count: data.count,
+      totalPages: data.total_pages,
+      results: data.results
     };
   }
 
@@ -53,7 +53,7 @@ class Buscar extends React.Component {
   handlePageChange = async ({ page }) => {
     await Router.push({
       pathname: '/buscar',
-      query: { q: this.state.query, page }
+      query: { q: this.props.query, page }
     });
 
     window.scrollTo(0, 0);
@@ -74,7 +74,7 @@ class Buscar extends React.Component {
         <div className="flex self-start justify-center">
           <div className="w-full max-w-lg mb-4">
             <Search
-              query={this.state.query}
+              query={this.props.query}
               onSubmit={this.handleSubmit}
               placeholder="Busca contratos por entidad gubernamental, contratista, o palabra clave"
             />
@@ -82,14 +82,14 @@ class Buscar extends React.Component {
               <p>
                 Se encontraron{' '}
                 <span className="font-bold text-grey-darkest">
-                  {intcomma(this.state.count)}
+                  {intcomma(this.props.count)}
                 </span>{' '}
                 contratos.
               </p>
             </div>
 
             <div className="mt-2">
-              {this.state.results.map((contract) => (
+              {this.props.results.map((contract) => (
                 <Link
                   href={`/contratos?slug=${contract.slug}`}
                   as={`/contratos/${contract.slug}`}
@@ -122,11 +122,11 @@ class Buscar extends React.Component {
                 </Link>
               ))}
 
-              {this.state.count > 0 ? (
+              {this.props.count > 0 ? (
                 <div className="text-center mt-4">
                   <Pagination
-                    page={this.state.page}
-                    pages={this.state.total_pages}
+                    page={this.props.page}
+                    pages={this.props.totalPages}
                     onPageChange={this.handlePageChange}
                   />
                 </div>

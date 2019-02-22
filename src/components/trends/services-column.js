@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import intcomma from '../../lib/intcomma';
 
 const TrendsServicesColumn = (props) => (
@@ -52,5 +53,11 @@ const TrendsServicesColumn = (props) => (
     </div>
   </div>
 );
+
+TrendsServicesColumn.propTypes = {
+  fiscal_year: PropTypes.number,
+  services: PropTypes.object,
+  service_groups: PropTypes.object
+};
 
 export default TrendsServicesColumn;

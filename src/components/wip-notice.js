@@ -11,4 +11,4 @@ const WorkInProgressNotice = () => (
   </div>
 );
 
-export default WorkInProgressNotice;
+export default React.memo(WorkInProgressNotice);

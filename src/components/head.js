@@ -59,4 +59,4 @@ Head.propTypes = {
   ogImage: string
 };
 
-export default Head;
+export default React.memo(Head);

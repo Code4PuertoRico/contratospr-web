@@ -7,16 +7,7 @@ import { getContract } from '../lib/api';
 class Contratos extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    let data = await getContract({ slug });
-    return data;
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      contract: props
-    };
+    return getContract({ slug });
   }
 
   render() {
@@ -27,17 +18,16 @@ class Contratos extends React.Component {
           <div className="w-full mb-4">
             <div className="flex flex-wrap">
               <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h2 className="mb-2">{this.state.contract.number}</h2>
+                <h2 className="mb-2">{this.props.number}</h2>
 
-                {this.state.contract.parent ? (
+                {this.props.parent ? (
                   <>
                     <p className="font-bold">Enmienda</p>
                     <p className="mb-2">
-                      {this.state.contract.amendment} -
+                      {this.props.amendment} -
                       <Link
-                        href={`/contratos?slug=${
-                          this.state.contract.parent.slug
-                        }`}>
+                        href={`/contrato?slug=${this.props.parent.slug}`}
+                        as={`/contratos/${this.props.parent.slug}`}>
                         <a className="text-grey-darkest hover:text-black">
                           Contrato original
                         </a>
@@ -47,39 +37,43 @@ class Contratos extends React.Component {
                 ) : null}
 
                 <p className="font-bold">Cuantía</p>
-                <p className="mb-2">${this.state.contract.amount_to_pay}</p>
+                <p className="mb-2">${this.props.amount_to_pay}</p>
 
                 <p className="font-bold">Categoría de servicio</p>
-                <p className="mb-2">{this.state.contract.service.group.name}</p>
+                <p className="mb-2">{this.props.service.group.name}</p>
 
                 <p className="font-bold">Tipo de servicio</p>
-                <p className="mb-2">{this.state.contract.service.name}</p>
+                <p className="mb-2">{this.props.service.name}</p>
 
                 <p className="font-bold">Entidad</p>
                 <p className="mb-2">
-                  <Link href={`/entidad/${this.state.contract.entity.slug}`}>
+                  <Link
+                    href={`/entidad?slug=${this.props.entity.slug}`}
+                    as={`/entidades/${this.props.entity.slug}`}>
                     <a className="text-grey-darkest hover:text-black">
-                      {this.state.contract.entity.name}
+                      {this.props.entity.name}
                     </a>
                   </Link>
                 </p>
 
                 <p className="font-bold">Otorgado</p>
-                <p className="mb-2">{this.state.contract.date_of_grant}</p>
+                <p className="mb-2">{this.props.date_of_grant}</p>
 
                 <p className="font-bold">Vigencia</p>
                 <p className="mb-2">
-                  {this.state.contract.effective_date_from} -{' '}
-                  {this.state.contract.effective_date_to}
+                  {this.props.effective_date_from} -{' '}
+                  {this.props.effective_date_to}
                 </p>
 
-                {this.state.contract.has_amendments ? (
+                {this.props.has_amendments ? (
                   <>
                     <p className="font-bold">Enmiendas</p>
                     <ul className="list-reset">
-                      {this.state.contract.amendments.map((contract) => (
-                        <li key={contract.id.toString()}>
-                          <Link href={`/contratos/${contract.slug}`}>
+                      {this.props.amendments.map((contract) => (
+                        <li key={this.props.id.toString()}>
+                          <Link
+                            href={`/contrato?slug${contract.slug}`}
+                            as={`/contratos/${contract.slug}`}>
                             <a className="text-grey-darkest hover:text-black">
                               {contract.number}
                             </a>
@@ -92,9 +86,11 @@ class Contratos extends React.Component {
 
                 <h3 className="mt-4 mb-2">Contratistas</h3>
                 <ul className="list-reset">
-                  {this.state.contract.contractors.map((contractor) => (
+                  {this.props.contractors.map((contractor) => (
                     <li key={contractor.id.toString()}>
-                      <Link href={`/contratista/${contractor.slug}`}>
+                      <Link
+                        href={`/contratista?slug=${contractor.slug}`}
+                        as={`/contratistas/${contractor.slug}`}>
                         <a className="text-grey-darkest hover:text-black">
                           {contractor.name}
                         </a>
@@ -109,10 +105,10 @@ class Contratos extends React.Component {
                     <h2>Documento</h2>
                   </div>
 
-                  {this.state.contract.document ? (
+                  {this.props.document ? (
                     <div className="flex-1 text-right">
                       <a
-                        href={this.state.contract.document.source_url}
+                        href={this.props.document.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="no-underline bg-grey-light hover:bg-grey text-grey-darkest font-bold py-1 px-2 rounded">
@@ -127,9 +123,9 @@ class Contratos extends React.Component {
                   ) : null}
                 </div>
                 <div className="sm:overflow-y-scroll sm:max-h-screen mt-2 border-t border-b">
-                  {this.state.contract.document ? (
+                  {this.props.document ? (
                     <>
-                      {this.state.contract.document.pages.map((page) => (
+                      {this.props.document.pages.map((page) => (
                         <p
                           className="font-serif text-base"
                           key={page.number}
