@@ -1,12 +1,14 @@
-import React from 'react'
-import NextHead from 'next/head'
-import { string } from 'prop-types'
+import React from 'react';
+import NextHead from 'next/head';
+import { string } from 'prop-types';
 
-const defaultDescription = ''
-const defaultOGURL = ''
-const defaultOGImage = ''
+import { GA_TRACKING_ID } from '../lib/gtag';
 
-const Head = props => (
+const defaultDescription = '';
+const defaultOGURL = '';
+const defaultOGImage = '';
+
+const Head = (props) => (
   <NextHead>
     <meta charSet="UTF-8" />
     <title>{props.title || ''}</title>
@@ -31,14 +33,30 @@ const Head = props => (
     <meta property="og:image" content={props.ogImage || defaultOGImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+
+    <script
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+    />
+
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}');
+          `
+      }}
+    />
   </NextHead>
-)
+);
 
 Head.propTypes = {
   title: string,
   description: string,
   url: string,
   ogImage: string
-}
+};
 
-export default Head
+export default React.memo(Head);
