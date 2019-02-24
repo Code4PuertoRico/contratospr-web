@@ -20,6 +20,7 @@ module.exports = withTypescript(
       };
 
       return config;
-    }
+    },
+    pageExtensions: ['js', 'jsx', 'ts', 'tsx']
   })
 );
