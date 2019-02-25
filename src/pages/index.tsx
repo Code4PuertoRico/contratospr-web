@@ -1,24 +1,40 @@
 import React from 'react';
+
+import { NextContext } from 'next';
 import Link from 'next/link';
 import Router from 'next/router';
+
 import Head from '../components/head';
 import Search from '../components/search';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
 import { getHome } from '../lib/api';
 
-class Index extends React.Component {
-  static async getInitialProps({ query }) {
+// TODO: type these better with what the api returns
+interface IndexProps {
+  fiscal_year: {
+    current: any;
+    choices: [{ [key:string]: any }];
+  };
+  recent_contracts: [{ [key:string]: any }];
+  contractors: [{ [key:string]: any }];
+  entities: [{ [key:string]: any }];
+  contracts_count: number;
+  contracts_total: number;
+}
+
+class Index extends React.Component<IndexProps> {
+  static async getInitialProps({ query }: NextContext) {
     return getHome({
       fiscalYear: query.fy || null
     });
   }
 
-  handleChangeFiscalYear = async (value) => {
+  handleChangeFiscalYear = (value: string) => {
     Router.push(`/?fy=${value}`);
   };
 
-  handleSubmit = async ({ query }) => {
+  handleSubmit = ({ query }: NextContext) => {
     if (query) {
       Router.push(`/buscar?q=${query}`);
     }
@@ -37,7 +53,7 @@ class Index extends React.Component {
                   className="block text-lg appearance-none w-full bg-white border-b border-grey-light hover:border-grey px-2 pr-6 rounded-none focus:outline-none focus:shadow-outline"
                   value={this.props.fiscal_year.current}
                   onChange={(e) => this.handleChangeFiscalYear(e.target.value)}>
-                  {this.props.fiscal_year.choices.map((choice) => (
+                  {this.props.fiscal_year.choices.map((choice: any) => (
                     <option value={choice} key={choice.toString()}>
                       {choice}
                     </option>
