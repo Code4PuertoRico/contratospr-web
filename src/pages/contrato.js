@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from '../components/head';
-import linebreaksbr from '../lib/linebreaksbr';
+import PDFViewer from '../components/pdf-viewer';
 import { getContract } from '../lib/api';
 
 class Contratos extends React.Component {
@@ -100,7 +100,7 @@ class Contratos extends React.Component {
                 </ul>
               </div>
               <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-2 border-b">
                   <div className="flex-1">
                     <h2>Documento</h2>
                   </div>
@@ -122,19 +122,9 @@ class Contratos extends React.Component {
                     </div>
                   ) : null}
                 </div>
-                <div className="sm:overflow-y-scroll sm:max-h-screen mt-2 border-t border-b">
-                  {this.props.document && this.props.document.pages ? (
-                    <>
-                      {this.props.document.pages.map((page) => (
-                        <p
-                          className="font-serif text-base"
-                          key={page.number}
-                          dangerouslySetInnerHTML={{
-                            __html: linebreaksbr(page.text)
-                          }}
-                        />
-                      ))}
-                    </>
+                <div className="sm:max-h-screen mt-2">
+                  {this.props.document && this.props.document.file ? (
+                    <PDFViewer src={this.props.document.file} />
                   ) : (
                     <div
                       className="bg-orange-lightest border-l-4 border-orange text-sm text-orange-dark p-4"

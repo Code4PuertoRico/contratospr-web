@@ -1,5 +1,7 @@
 /* eslint no-console: 0 no-undef: 0 */
 const path = require('path');
+const http = require('http');
+const https = require('https');
 const express = require('express');
 const next = require('next');
 
@@ -22,6 +24,15 @@ app.prepare().then(() => {
 
   server.get('/contratos/:slug', (req, res) => {
     return app.render(req, res, '/contrato', { slug: req.params.slug });
+  });
+
+  server.get('/_api/document', (req, res) => {
+    // TODO Only proxy expected URLs
+    let adapter = req.query.url.startsWith('https') ? https : http;
+    let proxy = adapter.get(req.query.url, (response) => {
+      response.pipe(res);
+    });
+    req.pipe(proxy);
   });
 
   server.get('*', (req, res) => {
