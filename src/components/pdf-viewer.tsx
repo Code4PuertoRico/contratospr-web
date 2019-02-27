@@ -7,9 +7,7 @@ interface PDFViewerProps {
 class PDFViewer extends React.Component<PDFViewerProps> {
   render() {
     let fileUrl = `/_api/document?url=${encodeURIComponent(this.props.src)}`;
-    let src = `/static/pdfjs/web/viewer.html?file=${encodeURIComponent(
-      fileUrl
-    )}`;
+    let src = `/static/pdfjs/viewer.html?file=${encodeURIComponent(fileUrl)}`;
 
     return (
       <div>
