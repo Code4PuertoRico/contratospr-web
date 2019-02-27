@@ -9,9 +9,6 @@
     "prefer-let",
     "react"
   ],
-  "rules": {
-    "react/prop-types": "off"
-  },
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 9,
@@ -30,7 +27,8 @@
   },
   "rules": {
     "prefer-const": "off",
-    "prefer-let/prefer-let": "error"
+    "prefer-let/prefer-let": "error",
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
