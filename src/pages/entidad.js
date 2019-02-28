@@ -5,6 +5,7 @@ import ContractsChart from '../components/contracts-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
 import { getEntity } from '../lib/api';
+import { formatDate } from '../lib/date';
 
 class Entidades extends React.Component {
   static async getInitialProps({ query }) {
@@ -73,10 +74,10 @@ class Entidades extends React.Component {
                           Tipo de servicio: {contract.service.name}
                         </div>
                         <div className="text-grey-darkest">
-                          Otorgado: {contract.date_of_grant}
+                          Otorgado: {formatDate(contract.date_of_grant)}
                         </div>
                         <div className="text-grey-darkest">
-                          Contratistas:
+                          Contratistas:{' '}
                           {contract.contractors.map((contractor) => (
                             <span key={contractor.id.toString()}>
                               {contractor.name}

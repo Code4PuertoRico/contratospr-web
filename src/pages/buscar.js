@@ -7,6 +7,7 @@ import Pagination from '../components/pagination';
 import intcomma from '../lib/intcomma';
 import millify from '../lib/millify';
 import { searchContracts } from '../lib/api';
+import { formatDate } from '../lib/date';
 
 const PAGE_SIZE = 12;
 
@@ -108,7 +109,7 @@ class Buscar extends React.Component {
                       Entidad: {contract.entity.name}
                     </div>
                     <div className="text-grey-darkest">
-                      Otorgado: {contract.date_of_grant}
+                      Otorgado: {formatDate(contract.date_of_grant)}
                     </div>
                     <div className="text-grey-darkest">
                       Contratistas:{' '}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Head from '../components/head';
 import PDFViewer from '../components/pdf-viewer';
 import { getContract } from '../lib/api';
+import { formatDate } from '../lib/date';
 
 class Contratos extends React.Component {
   static async getInitialProps({ query }) {
@@ -57,12 +58,12 @@ class Contratos extends React.Component {
                 </p>
 
                 <p className="font-bold">Otorgado</p>
-                <p className="mb-2">{this.props.date_of_grant}</p>
+                <p className="mb-2">{formatDate(this.props.date_of_grant)}</p>
 
                 <p className="font-bold">Vigencia</p>
                 <p className="mb-2">
-                  {this.props.effective_date_from} -{' '}
-                  {this.props.effective_date_to}
+                  {formatDate(this.props.effective_date_from)} -{' '}
+                  {formatDate(this.props.effective_date_to)}
                 </p>
 
                 {this.props.has_amendments ? (
