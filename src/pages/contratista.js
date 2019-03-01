@@ -5,6 +5,7 @@ import ContractsChart from '../components/contracts-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
 import { getContractor } from '../lib/api';
+import { formatDate } from '../lib/date';
 
 class Contratistas extends React.Component {
   static async getInitialProps({ query }) {
@@ -85,7 +86,7 @@ class Contratistas extends React.Component {
                           Tipo de servicio: {contract.service.name}
                         </div>
                         <div className="text-grey-darkest">
-                          Otorgado: {contract.date_of_grant}
+                          Otorgado: {formatDate(contract.date_of_grant)}
                         </div>
                         <div className="text-grey-darkest">
                           Contratistas:

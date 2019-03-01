@@ -9,16 +9,17 @@ import Search from '../components/search';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
 import { getHome } from '../lib/api';
+import { formatDate } from '../lib/date';
 
 // TODO: type these better with what the api returns
 interface IndexProps {
   fiscal_year: {
     current: any;
-    choices: [{ [key:string]: any }];
+    choices: [{ [key: string]: any }];
   };
-  recent_contracts: [{ [key:string]: any }];
-  contractors: [{ [key:string]: any }];
-  entities: [{ [key:string]: any }];
+  recent_contracts: [{ [key: string]: any }];
+  contractors: [{ [key: string]: any }];
+  entities: [{ [key: string]: any }];
   contracts_count: number;
   contracts_total: number;
 }
@@ -110,7 +111,7 @@ class Index extends React.Component<IndexProps> {
                         </span>
                       </div>
                       <div className="text-grey-darkest">
-                        Otorgado: {contract.date_of_grant}
+                        Otorgado: {formatDate(contract.date_of_grant)}
                       </div>
                       <div className="text-grey-darkest">
                         Entidad: {contract.entity.name}
