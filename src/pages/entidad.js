@@ -18,7 +18,7 @@ class Entidades extends React.Component {
 
     return (
       <div>
-        <Head title="Entidades" />
+        <Head title={entity.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
             <div className="flex flex-wrap">

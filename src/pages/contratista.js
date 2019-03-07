@@ -17,7 +17,7 @@ class Contratistas extends React.Component {
     let { contractor, entities, services, contracts } = this.props;
     return (
       <div>
-        <Head title="Contratistas" />
+        <Head title={contractor.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
             <div className="flex flex-wrap">

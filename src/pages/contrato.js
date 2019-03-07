@@ -14,7 +14,7 @@ class Contratos extends React.Component {
   render() {
     return (
       <div>
-        <Head title="Contratos" />
+        <Head title={`Contrato: ${this.props.number}`} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
             <div className="flex flex-wrap">
