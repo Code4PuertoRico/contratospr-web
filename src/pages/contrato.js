@@ -74,7 +74,7 @@ class Contratos extends React.Component {
                       {this.props.amendments.map((contract) => (
                         <li key={this.props.id.toString()}>
                           <Link
-                            href={`/contrato?slug${contract.slug}`}
+                            href={`/contrato?slug=${contract.slug}`}
                             as={`/contratos/${contract.slug}`}>
                             <a className="text-grey-darkest hover:text-black">
                               {contract.number} - {contract.amendment}
