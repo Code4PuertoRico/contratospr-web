@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Head from '../components/head';
 import PDFViewer from '../components/pdf-viewer';
+import intcomma from '../lib/intcomma';
 import { getContract } from '../lib/api';
 import { formatDate } from '../lib/date';
 
@@ -38,7 +39,7 @@ class Contratos extends React.Component {
                 ) : null}
 
                 <p className="font-bold">Cuantía</p>
-                <p className="mb-2">${this.props.amount_to_pay}</p>
+                <p className="mb-2">${intcomma(this.props.amount_to_pay)}</p>
 
                 <p className="font-bold">Categoría de servicio</p>
                 <p className="mb-2">{this.props.service.group.name}</p>
