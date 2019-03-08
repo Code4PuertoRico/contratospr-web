@@ -64,7 +64,7 @@ class Contratistas extends React.Component {
   render() {
     return (
       <div>
-        <Head title="Entidades" />
+        <Head title="Contratistas" />
         <div className="flex self-start justify-center">
           <div className="w-full max-w-lg mb-4">
             <Search

@@ -7,11 +7,14 @@ import { GA_TRACKING_ID } from '../lib/gtag';
 const defaultDescription = '';
 const defaultOGURL = '';
 const defaultOGImage = '';
+const defaultTitle = 'Contratos de Puerto Rico';
 
 const Head = (props) => (
   <NextHead>
     <meta charSet="UTF-8" />
-    <title>{props.title || ''}</title>
+    <title>
+      {props.title ? `${props.title} / ${defaultTitle}` : defaultTitle}
+    </title>
     <meta
       name="description"
       content={props.description || defaultDescription}
