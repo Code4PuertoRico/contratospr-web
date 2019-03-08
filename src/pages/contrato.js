@@ -25,7 +25,7 @@ class Contratos extends React.Component {
                   <>
                     <p className="font-bold">Enmienda</p>
                     <p className="mb-2">
-                      {this.props.amendment} -
+                      {this.props.amendment} -{' '}
                       <Link
                         href={`/contrato?slug=${this.props.parent.slug}`}
                         as={`/contratos/${this.props.parent.slug}`}>
@@ -76,7 +76,7 @@ class Contratos extends React.Component {
                             href={`/contrato?slug${contract.slug}`}
                             as={`/contratos/${contract.slug}`}>
                             <a className="text-grey-darkest hover:text-black">
-                              {contract.number}
+                              {contract.number} - {contract.amendment}
                             </a>
                           </Link>
                         </li>
