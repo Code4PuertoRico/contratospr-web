@@ -74,7 +74,13 @@ class Entidades extends React.Component {
                           Tipo de servicio: {contract.service.name}
                         </div>
                         <div className="text-grey-darkest">
-                          Otorgado: {formatDate(contract.date_of_grant)}
+                          Otorgado:{' '}
+                          {formatDate(contract.date_of_grant, 'short')}
+                        </div>
+                        <div className="text-grey-darkest">
+                          Vigencia:{' '}
+                          {formatDate(contract.effective_date_from, 'short')} -{' '}
+                          {formatDate(contract.effective_date_to, 'short')}
                         </div>
                         <div className="text-grey-darkest">
                           Contratistas:{' '}
