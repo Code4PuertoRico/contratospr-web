@@ -1,11 +1,14 @@
 import format from 'date-fns/format';
 import es from 'date-fns/locale/es';
 
-const DEFAULT_FORMAT = 'D [de] MMMM [de] YYYY';
+const DATE_FORMATS: { [key: string]: string } = {
+  default: 'D [de] MMMM [de] YYYY',
+  short: 'D/MMM/YYYY'
+};
 
 export function formatDate(
   date: Date | string,
-  formatStr: string = DEFAULT_FORMAT
+  formatStr: string = 'default'
 ): string {
-  return format(date, formatStr, { locale: es });
+  return format(date, DATE_FORMATS[formatStr] || formatStr, { locale: es });
 }

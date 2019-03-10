@@ -86,15 +86,16 @@ class Contratistas extends React.Component {
                           Tipo de servicio: {contract.service.name}
                         </div>
                         <div className="text-grey-darkest">
-                          Otorgado: {formatDate(contract.date_of_grant)}
+                          Entidad: {contract.entity.name}
                         </div>
                         <div className="text-grey-darkest">
-                          Contratistas:
-                          {contract.contractors.map((contractor) => (
-                            <span key={contractor.id.toString()}>
-                              {contractor.name}
-                            </span>
-                          ))}
+                          Otorgado:{' '}
+                          {formatDate(contract.date_of_grant, 'short')}
+                        </div>
+                        <div className="text-grey-darkest">
+                          Vigencia:{' '}
+                          {formatDate(contract.effective_date_from, 'short')} -{' '}
+                          {formatDate(contract.effective_date_to, 'short')}
                         </div>
                       </a>
                     </Link>
