@@ -44,7 +44,7 @@ class Index extends React.Component<IndexProps> {
   render() {
     return (
       <div>
-        <Head title="Contratos de Puerto Rico" />
+        <Head />
         <div className="my-4 mt-8 sm:mt-16">
           <div className="text-xl text-center">
             Durante el año fiscal
