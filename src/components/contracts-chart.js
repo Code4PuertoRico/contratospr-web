@@ -2,6 +2,7 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 import millify from '../lib/millify';
+import intcomma from '../lib/intcomma';
 
 const DEFAULT_POINT_BG_COLOR = 'rgba(52, 144, 220, 0.5)';
 const DEFAULT_POINT_RADIUS = 3;
@@ -56,7 +57,7 @@ function ContractsChart({ height, contracts }) {
           let contracts = data.datasets[0].data[item.index].contracts;
           return [
             'Contratos: ' + contracts,
-            'Total: $' + item.yLabel.toLocaleString()
+            'Total: $' + intcomma(item.yLabel)
           ];
         }
       }
@@ -64,7 +65,7 @@ function ContractsChart({ height, contracts }) {
     scales: {
       xAxes: [
         {
-          display: false,
+          display: true,
           type: 'time',
           time: {
             tooltipFormat: 'll'

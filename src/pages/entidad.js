@@ -7,29 +7,48 @@ import intcomma from '../lib/intcomma';
 import { getEntity } from '../lib/api';
 import { formatDate } from '../lib/date';
 
-class Entidades extends React.Component {
+class Entidad extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
     return getEntity({ slug });
   }
 
   render() {
-    let { entity, contractors, contracts } = this.props;
+    let { entity, services, contractors, contracts } = this.props;
 
     return (
       <div>
         <Head title={entity.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
+            <h2 className="mb-1 text-grey-darkest">{entity.name}</h2>
+
+            <h3 className="mb-2 text-grey-darker">
+              <span className="font-bold">
+                {intcomma(entity.contracts_count)}
+              </span>{' '}
+              contratos otorgados por un total de $
+              <span className="font-bold">
+                {intcomma(entity.contracts_total)}
+              </span>
+            </h3>
+
+            <div className="mt-4 mb-2">
+              <ContractsChart contracts={contracts} height={100} />
+            </div>
+
             <div className="flex flex-wrap">
               <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h2 className="mb-2">{entity.name}</h2>
-
-                <p className="font-bold">Contratos</p>
-                <p className="mb-2">{intcomma(entity.contracts_count)}</p>
-
-                <p className="font-bold">Cuantía</p>
-                <p className="mb-2">${intcomma(entity.contracts_total)}</p>
+                <h3 className="mb-2">Servicios</h3>
+                <ul className="list-reset">
+                  {services.map((service) => (
+                    <li key={service.id.toString()}>
+                      <span className="text-grey-darkest hover:text-black">
+                        {service.name}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
                 <h3 className="mt-4 mb-2">Contratistas</h3>
                 <ul className="list-reset">
@@ -49,9 +68,6 @@ class Entidades extends React.Component {
               <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
                 <div className="mt-2 mb-4">
                   <h2>Contratos</h2>
-                </div>
-                <div className="mt-2 mb-4">
-                  <ContractsChart contracts={contracts} height={100} />
                 </div>
                 <div
                   id="contracts-list"
@@ -103,4 +119,4 @@ class Entidades extends React.Component {
   }
 }
 
-export default Entidades;
+export default Entidad;

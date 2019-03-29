@@ -90,10 +90,16 @@ export async function getEntity({ slug }) {
     entity: entity.id
   });
 
+  // TODO: Handle pagination
+  let services = await fetchData(`${API_URL}/services/`, {
+    entity: entity.id
+  });
+
   return {
     entity,
     contractors: contractors.results,
-    contracts: contracts.results
+    contracts: contracts.results,
+    services: services.results
   };
 }
 

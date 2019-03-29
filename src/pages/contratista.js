@@ -20,17 +20,25 @@ class Contratistas extends React.Component {
         <Head title={contractor.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
+            <h2 className="mb-1 text-grey-darkest">{contractor.name}</h2>
+
+            <h3 className="mb-2 text-grey-darker">
+              <span className="font-bold">
+                {intcomma(contractor.contracts_count)}
+              </span>{' '}
+              contratos otorgados por un total de $
+              <span className="font-bold">
+                {intcomma(contractor.contracts_total)}
+              </span>
+            </h3>
+
+            <div className="mt-4 mb-2">
+              <ContractsChart contracts={contracts} height={100} />
+            </div>
+
             <div className="flex flex-wrap">
               <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h2 className="mb-2">{contractor.name}</h2>
-
-                <p className="font-bold">Contratos</p>
-                <p className="mb-2">{intcomma(contractor.contracts_count)}</p>
-
-                <p className="font-bold">Cuantía</p>
-                <p className="mb-2">${intcomma(contractor.contracts_total)}</p>
-
-                <h3 className="mt-4 mb-2">Servicios</h3>
+                <h3 className="mb-2">Servicios</h3>
                 <ul className="list-reset">
                   {services.map((service) => (
                     <li key={service.id.toString()}>
@@ -59,10 +67,6 @@ class Contratistas extends React.Component {
               <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
                 <div className="mt-2 mb-4">
                   <h2>Contratos</h2>
-                </div>
-
-                <div className="mt-2 mb-4">
-                  <ContractsChart contracts={contracts} height={100} />
                 </div>
 
                 <div
