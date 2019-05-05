@@ -5,7 +5,9 @@
     "build": "next build src",
     "start": "NODE_ENV=production node src/server.js",
     "lint": "eslint src",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
@@ -19,7 +21,8 @@
     "query-string": "^6.4.2",
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "snyk": "^1.161.1"
   },
   "devDependencies": {
     "@types/next": "^8.0.3",
@@ -51,5 +54,6 @@
       "eslint --fix",
       "git add"
     ]
-  }
+  },
+  "snyk": true
 }
