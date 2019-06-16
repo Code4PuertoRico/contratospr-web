@@ -28,9 +28,46 @@ export function getHome({ fiscalYear }) {
   return fetchData(url);
 }
 
-export function searchContracts({ query, page, pageSize }) {
+export function searchContracts({
+  query,
+  entity,
+  contractor,
+  service,
+  date_of_grant_after,
+  date_of_grant_before,
+  page,
+  pageSize
+}) {
   let url = `${API_URL}/contracts/`;
-  return fetchData(url, { search: query, page, page_size: pageSize });
+  return fetchData(url, {
+    search: query,
+    entity,
+    contractor,
+    service,
+    date_of_grant_after,
+    date_of_grant_before,
+    page,
+    page_size: pageSize
+  });
+}
+
+export function getSpendingOverTime({
+  query,
+  entity,
+  contractor,
+  service,
+  date_of_grant_after,
+  date_of_grant_before
+}) {
+  let url = `${API_URL}/contracts/spending_over_time/`;
+  return fetchData(url, {
+    search: query,
+    entity,
+    contractor,
+    service,
+    date_of_grant_after,
+    date_of_grant_before
+  });
 }
 
 export async function getContractor({ slug }) {
@@ -59,9 +96,17 @@ export async function getContractor({ slug }) {
   };
 }
 
-export async function searchContractors({ query, page, pageSize }) {
+export async function searchContractors({
+  query,
+  entity,
+  service,
+  page,
+  pageSize
+}) {
   return fetchData(`${API_URL}/contractors/`, {
     search: query,
+    entity,
+    service,
     page,
     page_size: pageSize
   });
@@ -75,6 +120,24 @@ export async function getContract({ slug }) {
   }
 
   return contract;
+}
+
+export async function getEntitiesByIds(entityIds) {
+  return fetchData(`${API_URL}/entities/`, {
+    id: entityIds
+  });
+}
+
+export async function getContractorsByIds(contractorIds) {
+  return fetchData(`${API_URL}/contractors/`, {
+    id: contractorIds
+  });
+}
+
+export function geServicesByIds(serviceIds) {
+  return fetchData(`${API_URL}/services/`, {
+    id: serviceIds
+  });
 }
 
 export async function getEntity({ slug }) {
@@ -103,8 +166,28 @@ export async function getEntity({ slug }) {
   };
 }
 
-export function searchEntities({ query, page, pageSize }) {
+export function searchEntities({ query, contractor, service, page, pageSize }) {
   return fetchData(`${API_URL}/entities/`, {
+    search: query,
+    contractor,
+    service,
+    page,
+    page_size: pageSize
+  });
+}
+
+export function searchServices({ query, contractor, entity, page, pageSize }) {
+  return fetchData(`${API_URL}/services/`, {
+    search: query,
+    contractor,
+    entity,
+    page,
+    page_size: pageSize
+  });
+}
+
+export function searchServiceGroups({ query, page, pageSize }) {
+  return fetchData(`${API_URL}/service-groups/`, {
     search: query,
     page,
     page_size: pageSize
