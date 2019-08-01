@@ -33,8 +33,6 @@ export function searchContracts({
   entity,
   contractor,
   service,
-  date_of_grant_after,
-  date_of_grant_before,
   page,
   pageSize
 }) {
@@ -44,29 +42,18 @@ export function searchContracts({
     entity,
     contractor,
     service,
-    date_of_grant_after,
-    date_of_grant_before,
     page,
     page_size: pageSize
   });
 }
 
-export function getSpendingOverTime({
-  query,
-  entity,
-  contractor,
-  service,
-  date_of_grant_after,
-  date_of_grant_before
-}) {
+export function getSpendingOverTime({ query, entity, contractor, service }) {
   let url = `${API_URL}/contracts/spending_over_time/`;
   return fetchData(url, {
     search: query,
     entity,
     contractor,
-    service,
-    date_of_grant_after,
-    date_of_grant_before
+    service
   });
 }
 

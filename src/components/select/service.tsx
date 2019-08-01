@@ -10,14 +10,6 @@ class ServiceSelect extends React.PureComponent {
       pageSize: 20
     };
 
-    if (this.props.contractors.length > 0) {
-      query.contractor = this.props.contractors.map((options) => options.value);
-    }
-
-    if (this.props.entities.length > 0) {
-      query.entity = this.props.entities.map((options) => options.value);
-    }
-
     let data = await searchServices(query);
 
     return data.results.map((service) => {
@@ -32,10 +24,12 @@ class ServiceSelect extends React.PureComponent {
     return (
       <AsyncSelect
         isMulti={true}
+        defaultOptions={true}
         loadOptions={this.loadServiceOptions}
         defaultValue={this.props.services}
         instanceId="services-select"
         onChange={this.props.onChange}
+        placeholder="Selecciona tipos de servicios"
       />
     );
   }

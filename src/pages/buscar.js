@@ -1,12 +1,7 @@
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
-import '../styles/react-dates.css';
-
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Bar } from 'react-chartjs-2';
-import { DateRangePicker, toMomentObject } from 'react-dates';
 import Head from '../components/head';
 import Pagination from '../components/pagination';
 import intcomma from '../lib/intcomma';
@@ -15,12 +10,10 @@ import { formatDate } from '../lib/date';
 import {
   searchContracts,
   getEntitiesByIds,
-  getContractorsByIds,
   geServicesByIds,
   getSpendingOverTime
 } from '../lib/api';
 import EntitySelect from '../components/select/entity';
-import ContractorSelect from '../components/select/contractor';
 import ServiceSelect from '../components/select/service';
 
 const PAGE_SIZE = 12;
@@ -66,12 +59,10 @@ class Buscar extends React.Component {
   static async getInitialProps({ query }) {
     let searchQuery = query.q;
     let entityIds = query.entity;
-    let contractorIds = query.contractor;
+    let contractorQuery = query.contractor;
     let serviceIds = query.service;
-    let dateOfGrantAfter = query.date_of_grant_after;
-    let dateOfGrantBefore = query.date_of_grant_before;
 
-    if (!searchQuery && !entityIds && !contractorIds && !serviceIds) {
+    if (!searchQuery && !entityIds && !contractorQuery && !serviceIds) {
       return {
         query: '',
         page: 1,
@@ -79,18 +70,15 @@ class Buscar extends React.Component {
         totalPages: 1,
         results: [],
         entities: [],
-        contractors: [],
+        contractor: '',
         services: [],
-        spendingOverTime: {},
-        startDate: null,
-        endDate: null
+        spendingOverTime: {}
       };
     }
 
     let page = (query.page && parseInt(query.page, 10)) || 1;
 
     let entities = [];
-    let contractors = [];
     let services = [];
 
     if (entityIds) {
@@ -99,16 +87,6 @@ class Buscar extends React.Component {
         return {
           value: entity.id,
           label: entity.name
-        };
-      });
-    }
-
-    if (contractorIds) {
-      let contractorsResponse = await getContractorsByIds(contractorIds);
-      contractors = contractorsResponse.results.map((contractor) => {
-        return {
-          value: contractor.id,
-          label: contractor.name
         };
       });
     }
@@ -126,10 +104,8 @@ class Buscar extends React.Component {
     let data = await searchContracts({
       query: searchQuery,
       entity: entityIds,
-      contractor: contractorIds,
+      contractor: contractorQuery,
       service: serviceIds,
-      date_of_grant_after: dateOfGrantAfter,
-      date_of_grant_before: dateOfGrantBefore,
       page,
       pageSize: PAGE_SIZE
     });
@@ -137,10 +113,8 @@ class Buscar extends React.Component {
     let spendingOverTimeResponse = await getSpendingOverTime({
       query: searchQuery,
       entity: entityIds,
-      contractor: contractorIds,
-      service: serviceIds,
-      date_of_grant_after: dateOfGrantAfter,
-      date_of_grant_before: dateOfGrantBefore
+      contractor: contractorQuery,
+      service: serviceIds
     });
 
     let spendingOverTime = {
@@ -164,11 +138,9 @@ class Buscar extends React.Component {
       totalPages: data.total_pages,
       results: data.results,
       entities,
-      contractors,
+      contractor: contractorQuery,
       services,
-      spendingOverTime,
-      startDate: dateOfGrantAfter,
-      endDate: dateOfGrantBefore
+      spendingOverTime
     };
   }
 
@@ -176,10 +148,7 @@ class Buscar extends React.Component {
     super(props);
     this.state = {
       entities: props.entities,
-      contractors: props.contractors,
-      services: props.services,
-      startDate: props.startDate,
-      endDate: props.endDate
+      services: props.services
     };
   }
 
@@ -188,7 +157,7 @@ class Buscar extends React.Component {
       this.props.page !== prevProps.page ||
       this.props.query !== prevProps.query ||
       this.props.entities !== prevProps.entities ||
-      this.props.contractors !== prevProps.contractors ||
+      this.props.contractor !== prevProps.contractor ||
       this.props.services !== prevProps.services
     ) {
       this.setState(Object.assign({}, this.props));
@@ -196,16 +165,17 @@ class Buscar extends React.Component {
   }
 
   handlePageChange = async ({ page }) => {
-    let routeQuery = { q: this.props.query, page };
+    let routeQuery = {
+      q: this.props.query,
+      page
+    };
+
+    if (this.props.contractor) {
+      routeQuery.contractor = this.props.contractor;
+    }
 
     if (this.state.entities.length > 0) {
       routeQuery.entity = this.state.entities.map((options) => options.value);
-    }
-
-    if (this.state.contractors.length > 0) {
-      routeQuery.contractor = this.state.contractors.map(
-        (options) => options.value
-      );
     }
 
     if (this.state.services.length > 0) {
@@ -222,30 +192,20 @@ class Buscar extends React.Component {
   };
 
   handleSubmit = () => {
-    let routeQuery = { q: this.queryInput.value };
+    let routeQuery = {
+      q: this.queryInput.value
+    };
+
+    if (this.contractorInput.value) {
+      routeQuery.contractor = this.contractorInput.value;
+    }
 
     if (this.state.entities.length > 0) {
       routeQuery.entity = this.state.entities.map((options) => options.value);
     }
 
-    if (this.state.contractors.length > 0) {
-      routeQuery.contractor = this.state.contractors.map(
-        (options) => options.value
-      );
-    }
-
     if (this.state.services.length > 0) {
       routeQuery.service = this.state.services.map((options) => options.value);
-    }
-
-    if (this.state.startDate) {
-      routeQuery.date_of_grant_after = this.state.startDate.format(
-        'YYYY-MM-DD'
-      );
-    }
-
-    if (this.state.startDate) {
-      routeQuery.date_of_grant_before = this.state.endDate.format('YYYY-MM-DD');
     }
 
     Router.push({
@@ -267,7 +227,7 @@ class Buscar extends React.Component {
                   method="GET"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    this.handleSubmit({ query: this.queryInput.value });
+                    this.handleSubmit();
                   }}>
                   <div className="mb-2 text-sm">
                     <p className="text-sm">Palabra clave</p>
@@ -276,15 +236,23 @@ class Buscar extends React.Component {
                       type="text"
                       defaultValue={this.props.query}
                       ref={(node) => (this.queryInput = node)}
-                      placeholder="Busca contratos por entidad gubernamental, contratista, o palabra clave"
+                      placeholder="Busca contratos por palabra clave"
+                    />
+                  </div>
+                  <div className="mb-2 text-sm">
+                    <p className="text-sm">Contratistas</p>
+                    <input
+                      className="w-full py-2 px-3 mr-4 appearance-none border rounded text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      defaultValue={this.props.contractor}
+                      ref={(node) => (this.contractorInput = node)}
+                      placeholder="Busca contratos por contratista"
                     />
                   </div>
                   <div className="mb-2 text-sm">
                     <p className="text-sm">Entidades</p>
                     <EntitySelect
                       entities={this.props.entities}
-                      contractors={[]}
-                      services={[]}
                       onChange={(options) => {
                         this.setState({
                           entities: options
@@ -292,51 +260,16 @@ class Buscar extends React.Component {
                       }}
                     />
                   </div>
-                  <div className="mb-2 text-sm">
-                    <p className="text-sm">Contratistas</p>
-                    <ContractorSelect
-                      contractors={this.props.contractors}
-                      entities={[]}
-                      services={[]}
-                      onChange={(options) => {
-                        this.setState({
-                          contractors: options
-                        });
-                      }}
-                    />
-                  </div>
+
                   <div className="mb-2 text-sm">
                     <p className="text-sm">Servicios</p>
                     <ServiceSelect
-                      contractors={[]}
-                      entities={[]}
                       services={this.props.services}
                       onChange={(options) => {
                         this.setState({
                           services: options
                         });
                       }}
-                    />
-                  </div>
-                  <div className="mb-2 text-sm">
-                    <p className="text-sm">Periodo de tiempo</p>
-                    <DateRangePicker
-                      noBorder={true}
-                      small={true}
-                      block={true}
-                      showClearDates={true}
-                      isOutsideRange={() => false}
-                      startDate={toMomentObject(this.state.startDate)}
-                      startDateId="your_unique_start_date_id"
-                      endDate={toMomentObject(this.state.endDate)}
-                      endDateId="your_unique_end_date_id"
-                      onDatesChange={({ startDate, endDate }) =>
-                        this.setState({ startDate, endDate })
-                      }
-                      focusedInput={this.state.focusedInput}
-                      onFocusChange={(focusedInput) =>
-                        this.setState({ focusedInput })
-                      }
                     />
                   </div>
                   <div className="mt-4 text-sm">
