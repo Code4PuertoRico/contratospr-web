@@ -1,12 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/lib/Async';
 import { searchEntities } from '../../lib/api';
 
-class EntitySelect extends React.PureComponent {
-  loadEntityOptions = async (inputValue: string) => {
-    let query = { query: inputValue, page: 1, pageSize: 20 };
+type Props = { entities: Array<any>; onChange: any };
 
-    let data = await searchEntities(query);
+class EntitySelect extends React.PureComponent<Props> {
+  static propTypes = {
+    entities: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired
+  };
+
+  loadEntityOptions = async (inputValue: string) => {
+    let data = await searchEntities({
+      query: inputValue,
+      page: 1,
+      pageSize: 20
+    });
 
     return data.results.map((entity: { id: string; name: string }) => {
       return {

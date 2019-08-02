@@ -153,21 +153,17 @@ export async function getEntity({ slug }) {
   };
 }
 
-export function searchEntities({ query, contractor, service, page, pageSize }) {
+export function searchEntities({ query, page, pageSize }) {
   return fetchData(`${API_URL}/entities/`, {
     search: query,
-    contractor,
-    service,
     page,
     page_size: pageSize
   });
 }
 
-export function searchServices({ query, contractor, entity, page, pageSize }) {
+export function searchServices({ query, page, pageSize }) {
   return fetchData(`${API_URL}/services/`, {
     search: query,
-    contractor,
-    entity,
     page,
     page_size: pageSize
   });

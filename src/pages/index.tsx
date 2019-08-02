@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NextContext } from 'next';
+import { NextPageContext } from 'next';
 import Link from 'next/link';
 import Router from 'next/router';
 
@@ -25,7 +25,7 @@ interface IndexProps {
 }
 
 class Index extends React.Component<IndexProps> {
-  static async getInitialProps({ query }: NextContext) {
+  static async getInitialProps({ query }: NextPageContext) {
     return getHome({
       fiscalYear: query.fy || null
     });
@@ -35,7 +35,7 @@ class Index extends React.Component<IndexProps> {
     Router.push(`/?fy=${value}`);
   };
 
-  handleSubmit = ({ query }: NextContext) => {
+  handleSubmit = ({ query }: NextPageContext) => {
     if (query) {
       Router.push(`/buscar?q=${query}`);
     }
