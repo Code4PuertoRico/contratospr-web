@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Bar } from 'react-chartjs-2';
+import SpendingOverTimeChart from '../components/spending-over-time-chart';
 import Head from '../components/head';
 import Pagination from '../components/pagination';
 import intcomma from '../lib/intcomma';
@@ -17,43 +17,6 @@ import EntitySelect from '../components/select/entity';
 import ServiceSelect from '../components/select/service';
 
 const PAGE_SIZE = 12;
-
-const chartOptions = {
-  legend: {
-    display: false
-  },
-  tooltips: {
-    displayColors: false,
-    callbacks: {
-      label: function(item, data) {
-        let count = data.datasets[0].data[item.index].count;
-        return ['Contratos: ' + count, 'Total: $' + intcomma(item.yLabel)];
-      }
-    }
-  },
-  scales: {
-    xAxes: [
-      {
-        type: 'time',
-        time: {
-          unit: 'year',
-          tooltipFormat: 'MMM YYYY'
-        }
-      }
-    ],
-    yAxes: [
-      {
-        display: true,
-        ticks: {
-          beginAtZero: true,
-          callback: function(value) {
-            return '$' + millify(value);
-          }
-        }
-      }
-    ]
-  }
-};
 
 class Buscar extends React.Component {
   static async getInitialProps({ query }) {
@@ -72,7 +35,7 @@ class Buscar extends React.Component {
         entities: [],
         contractor: '',
         services: [],
-        spendingOverTime: {}
+        spendingOverTime: []
       };
     }
 
@@ -110,26 +73,12 @@ class Buscar extends React.Component {
       pageSize: PAGE_SIZE
     });
 
-    let spendingOverTimeResponse = await getSpendingOverTime({
+    let spendingOverTime = await getSpendingOverTime({
       query: searchQuery,
       entity: entityIds,
       contractor: contractorQuery,
       service: serviceIds
     });
-
-    let spendingOverTime = {
-      labels: spendingOverTimeResponse.map((point) => point.month),
-      datasets: [
-        {
-          label: 'Spending Over Time (Monthly)',
-          backgroundColor: 'rgba(52, 144, 220, 0.5)',
-          borderColor: 'rgba(52, 144, 220, 1)',
-          data: spendingOverTimeResponse.map((point) => {
-            return { y: point.total, x: point.month, count: point.count };
-          })
-        }
-      ]
-    };
 
     return {
       query: searchQuery,
@@ -283,11 +232,10 @@ class Buscar extends React.Component {
               </div>
               <div className="w-full sm:w-2/3 px-4 py-2 text-lg text-grey-darkest">
                 <div className="w-full max-w-lg mb-4">
-                  <Bar
-                    data={this.props.spendingOverTime}
+                  <SpendingOverTimeChart
+                    dataPoints={this.props.spendingOverTime}
                     width={100}
                     height={40}
-                    options={chartOptions}
                   />
                   <div className="mt-4">
                     <p>
