@@ -1,18 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/lib/Async';
 import { searchServices } from '../../lib/api';
 
-class ServiceSelect extends React.PureComponent {
-  loadServiceOptions = async (inputValue) => {
-    let query = {
+type Props = { services: Array<any>; onChange: any };
+
+class ServiceSelect extends React.PureComponent<Props> {
+  static propTypes = {
+    services: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired
+  };
+
+  loadServiceOptions = async (inputValue: string) => {
+    let data = await searchServices({
       query: inputValue,
       page: 1,
       pageSize: 20
-    };
+    });
 
-    let data = await searchServices(query);
-
-    return data.results.map((service) => {
+    return data.results.map((service: { id: string; name: string }) => {
       return {
         value: service.id,
         label: service.name
