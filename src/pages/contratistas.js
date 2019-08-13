@@ -98,6 +98,12 @@ class Contratistas extends React.Component {
                     <div className="text-grey-darkest">
                       Cuantía: ${millify(contractor.contracts_total)}
                     </div>
+                    <div className="text-grey-darkest">
+                      Entidades:{' '}
+                      {contractor.entities.map((entity) => (
+                        <span key={entity.id.toString()}>{entity.name} </span>
+                      ))}
+                    </div>
                   </a>
                 </Link>
               ))}

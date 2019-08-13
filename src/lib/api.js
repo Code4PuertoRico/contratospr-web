@@ -40,7 +40,7 @@ export function searchContracts({
   return fetchData(url, {
     search: query,
     entity,
-    contractor,
+    contractor_name: contractor,
     service,
     page,
     page_size: pageSize
@@ -61,23 +61,19 @@ export async function getContractor({ slug }) {
   let contractor = await fetchData(`${API_URL}/contractors/${slug}/`);
 
   // TODO: Handle pagination
-  let entities = await fetchData(`${API_URL}/entities/`, {
-    contractor: contractor.id
-  });
-
-  // TODO: Handle pagination
   let services = await fetchData(`${API_URL}/services/`, {
-    contractor: contractor.id
+    contractor_id: contractor.id
   });
 
   // TODO: Handle pagination
   let contracts = await fetchData(`${API_URL}/contracts/`, {
-    contractor: contractor.id
+    contractor_id: contractor.id,
+    exclude_amendments: true
   });
 
   return {
     contractor,
-    entities: entities.results,
+    entities: contractor.entities,
     services: services.results,
     contracts: contracts.results
   };
@@ -132,17 +128,18 @@ export async function getEntity({ slug }) {
 
   // TODO: Handle pagination
   let contractors = await fetchData(`${API_URL}/contractors/`, {
-    entity: entity.id
+    entity_id: entity.id
   });
 
   // TODO: Handle pagination
   let contracts = await fetchData(`${API_URL}/contracts/`, {
-    entity: entity.id
+    entity_id: entity.id,
+    exclude_amendments: true
   });
 
   // TODO: Handle pagination
   let services = await fetchData(`${API_URL}/services/`, {
-    entity: entity.id
+    entity_id: entity.id
   });
 
   return {
