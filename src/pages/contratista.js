@@ -1,20 +1,55 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from '../components/head';
-import ContractsChart from '../components/contracts-chart';
+import Pagination from '../components/pagination';
+import PaginatedChart from '../components/paginated-chart';
+import SpendingOverTimeChart from '../components/spending-over-time-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
-import { getContractor } from '../lib/api';
+import {
+  getContractor,
+  getServicesByContractorId,
+  getContractsByContractorId,
+  getSpendingOverTime
+} from '../lib/api';
 import { formatDate } from '../lib/date';
 
 class Contratistas extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    return getContractor({ slug });
+    let result = await getContractor({ slug });
+    let spendingOverTime = await getSpendingOverTime({
+      contractor: result.contractor.id
+    });
+
+    return { ...result, spendingOverTime };
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      services: props.services,
+      contracts: props.contracts
+    };
+  }
+
+  handlePageChange = async ({ page }) => {
+    let contracts = await getContractsByContractorId(this.props.contractor.id, {
+      page
+    });
+    this.setState({ contracts });
+  };
+
+  handleServicesPageChange = async ({ page }) => {
+    let services = await getServicesByContractorId(this.props.contractor.id, {
+      page
+    });
+    this.setState({ services });
+  };
+
   render() {
-    let { contractor, entities, services, contracts } = this.props;
+    let { contractor, entities, spendingOverTime } = this.props;
+    let { services, contracts } = this.state;
     return (
       <div>
         <Head title={contractor.name} />
@@ -33,22 +68,22 @@ class Contratistas extends React.Component {
             </h3>
 
             <div className="mt-4 mb-2">
-              <ContractsChart contracts={contracts} height={100} />
+              <SpendingOverTimeChart
+                dataPoints={spendingOverTime}
+                width={100}
+                height={25}
+              />
             </div>
 
             <div className="flex flex-wrap">
               <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
                 <h3 className="mb-2">Servicios</h3>
-                <ul className="list-reset">
-                  {services.map((service) => (
-                    <li key={service.id.toString()}>
-                      <span className="text-grey-darkest hover:text-black">
-                        {service.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
+                <PaginatedChart
+                  data={services}
+                  onPageChange={this.handleContractorsPageChange}
+                />
+              </div>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
                 <h3 className="mt-4 mb-2">Entidades</h3>
                 <ul className="list-reset">
                   {entities.map((entity) => (
@@ -64,48 +99,55 @@ class Contratistas extends React.Component {
                   ))}
                 </ul>
               </div>
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
-                <div className="mt-2 mb-4">
-                  <h2>Contratos</h2>
-                </div>
+            </div>
 
-                <div
-                  id="contracts-list"
-                  className="sm:overflow-y-scroll sm:max-h-screen mt-2 border-t border-b">
-                  {contracts.map((contract) => (
-                    <Link
-                      href={`/contrato?slug=${contract.slug}`}
-                      as={`/contratos/${contract.slug}`}
-                      key={contract.id.toString()}>
-                      <a
-                        className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
-                        data-date={contract.date_of_grant}>
-                        <div className="text-xl font-bold text-grey-darkest">
-                          {contract.number}{' '}
-                          <span className="text-base text-grey-darker">
-                            ${millify(contract.amount_to_pay)}
-                          </span>
-                        </div>
-                        <div className="text-grey-darkest">
-                          Tipo de servicio: {contract.service.name}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Entidad: {contract.entity.name}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Otorgado:{' '}
-                          {formatDate(contract.date_of_grant, 'short')}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Vigencia:{' '}
-                          {formatDate(contract.effective_date_from, 'short')} -{' '}
-                          {formatDate(contract.effective_date_to, 'short')}
-                        </div>
-                      </a>
-                    </Link>
-                  ))}
-                </div>
+            <div className="mt-2 mb-4">
+              <div className="mt-2 mb-4">
+                <h2>Contratos</h2>
               </div>
+
+              <div id="contracts-list" className="mt-2 border-t border-b">
+                {contracts.results.map((contract) => (
+                  <Link
+                    href={`/contrato?slug=${contract.slug}`}
+                    as={`/contratos/${contract.slug}`}
+                    key={contract.id.toString()}>
+                    <a
+                      className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
+                      data-date={contract.date_of_grant}>
+                      <div className="text-xl font-bold text-grey-darkest">
+                        {contract.number}{' '}
+                        <span className="text-base text-grey-darker">
+                          ${millify(contract.amount_to_pay)}
+                        </span>
+                      </div>
+                      <div className="text-grey-darkest">
+                        Tipo de servicio: {contract.service.name}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Entidad: {contract.entity.name}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Otorgado: {formatDate(contract.date_of_grant, 'short')}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Vigencia:{' '}
+                        {formatDate(contract.effective_date_from, 'short')} -{' '}
+                        {formatDate(contract.effective_date_to, 'short')}
+                      </div>
+                    </a>
+                  </Link>
+                ))}
+              </div>
+              {contracts.count > 0 && contracts.total_pages > 1 ? (
+                <div className="text-center mt-4">
+                  <Pagination
+                    page={contracts.page}
+                    pages={contracts.total_pages}
+                    onPageChange={this.handlePageChange}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

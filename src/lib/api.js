@@ -57,25 +57,43 @@ export function getSpendingOverTime({ query, entity, contractor, service }) {
   });
 }
 
+export function getServicesByContractorId(contractorId, { page }) {
+  return fetchData(`${API_URL}/services/`, {
+    contractor_id: contractorId,
+    ordering: '-contracts_total',
+    page_size: 12,
+    page
+  });
+}
+
+export function getContractsByContractorId(contractorId, { page }) {
+  return fetchData(`${API_URL}/contracts/`, {
+    contractor_id: contractorId,
+    exclude_amendments: true,
+    page_size: 12,
+    page
+  });
+}
+
 export async function getContractor({ slug }) {
   let contractor = await fetchData(`${API_URL}/contractors/${slug}/`);
+  let services;
+  let contracts;
 
-  // TODO: Handle pagination
-  let services = await fetchData(`${API_URL}/services/`, {
-    contractor_id: contractor.id
-  });
-
-  // TODO: Handle pagination
-  let contracts = await fetchData(`${API_URL}/contracts/`, {
-    contractor_id: contractor.id,
-    exclude_amendments: true
-  });
+  await Promise.all([
+    getServicesByContractorId(contractor.id, { page: 1 }).then(
+      (r) => (services = r)
+    ),
+    getContractsByContractorId(contractor.id, { page: 1 }).then(
+      (r) => (contracts = r)
+    )
+  ]);
 
   return {
     contractor,
     entities: contractor.entities,
-    services: services.results,
-    contracts: contracts.results
+    services: services,
+    contracts: contracts
   };
 }
 
@@ -111,42 +129,58 @@ export async function getEntitiesByIds(entityIds) {
   });
 }
 
-export async function getContractorsByIds(contractorIds) {
-  return fetchData(`${API_URL}/contractors/`, {
-    id: contractorIds
-  });
-}
-
-export function geServicesByIds(serviceIds) {
+export function getServicesByIds(serviceIds) {
   return fetchData(`${API_URL}/services/`, {
     id: serviceIds
   });
 }
 
+export function getServicesByEntityId(entityId, { page }) {
+  return fetchData(`${API_URL}/services/`, {
+    entity_id: entityId,
+    ordering: '-contracts_total',
+    page_size: 12,
+    page
+  });
+}
+
+export function getContractsByEntityId(entityId, { page }) {
+  return fetchData(`${API_URL}/contracts/`, {
+    entity_id: entityId,
+    exclude_amendments: true,
+    page_size: 12,
+    page
+  });
+}
+
+export function getContractorsByEntityId(entityId, { page }) {
+  return fetchData(`${API_URL}/contractors/`, {
+    entity_id: entityId,
+    ordering: '-contracts_total',
+    page_size: 12,
+    page
+  });
+}
+
 export async function getEntity({ slug }) {
   let entity = await fetchData(`${API_URL}/entities/${slug}/`);
+  let contractors;
+  let contracts;
+  let services;
 
-  // TODO: Handle pagination
-  let contractors = await fetchData(`${API_URL}/contractors/`, {
-    entity_id: entity.id
-  });
-
-  // TODO: Handle pagination
-  let contracts = await fetchData(`${API_URL}/contracts/`, {
-    entity_id: entity.id,
-    exclude_amendments: true
-  });
-
-  // TODO: Handle pagination
-  let services = await fetchData(`${API_URL}/services/`, {
-    entity_id: entity.id
-  });
+  await Promise.all([
+    getContractorsByEntityId(entity.id, { page: 1 }).then(
+      (r) => (contractors = r)
+    ),
+    getContractsByEntityId(entity.id, { page: 1 }).then((r) => (contracts = r)),
+    getServicesByEntityId(entity.id, { page: 1 }).then((r) => (services = r))
+  ]);
 
   return {
     entity,
-    contractors: contractors.results,
-    contracts: contracts.results,
-    services: services.results
+    contractors,
+    contracts,
+    services
   };
 }
 
@@ -160,14 +194,6 @@ export function searchEntities({ query, page, pageSize }) {
 
 export function searchServices({ query, page, pageSize }) {
   return fetchData(`${API_URL}/services/`, {
-    search: query,
-    page,
-    page_size: pageSize
-  });
-}
-
-export function searchServiceGroups({ query, page, pageSize }) {
-  return fetchData(`${API_URL}/service-groups/`, {
     search: query,
     page,
     page_size: pageSize
