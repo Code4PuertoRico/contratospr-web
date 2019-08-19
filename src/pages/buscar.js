@@ -10,7 +10,7 @@ import { formatDate } from '../lib/date';
 import {
   searchContracts,
   getEntitiesByIds,
-  geServicesByIds,
+  getServicesByIds,
   getSpendingOverTime
 } from '../lib/api';
 import EntitySelect from '../components/select/entity';
@@ -43,42 +43,54 @@ class Buscar extends React.Component {
 
     let entities = [];
     let services = [];
+    let promises = [];
 
     if (entityIds) {
-      let entitiesResponse = await getEntitiesByIds(entityIds);
-      entities = entitiesResponse.results.map((entity) => {
-        return {
-          value: entity.id,
-          label: entity.name
-        };
-      });
+      promises.push(
+        getEntitiesByIds(entityIds).then((r) => {
+          entities = r.results.map((entity) => {
+            return {
+              value: entity.id,
+              label: entity.name
+            };
+          });
+        })
+      );
     }
 
     if (serviceIds) {
-      let servicesResponse = await geServicesByIds(serviceIds);
-      services = servicesResponse.results.map((service) => {
-        return {
-          value: service.id,
-          label: service.name
-        };
-      });
+      promises.push(
+        getServicesByIds(serviceIds).then((r) => {
+          services = r.results.map((service) => {
+            return {
+              value: service.id,
+              label: service.name
+            };
+          });
+        })
+      );
     }
 
-    let data = await searchContracts({
-      query: searchQuery,
-      entity: entityIds,
-      contractor: contractorQuery,
-      service: serviceIds,
-      page,
-      pageSize: PAGE_SIZE
-    });
+    let data;
+    let spendingOverTime;
 
-    let spendingOverTime = await getSpendingOverTime({
-      query: searchQuery,
-      entity: entityIds,
-      contractor: contractorQuery,
-      service: serviceIds
-    });
+    await Promise.all([
+      ...promises,
+      searchContracts({
+        query: searchQuery,
+        entity: entityIds,
+        contractor: contractorQuery,
+        service: serviceIds,
+        page,
+        pageSize: PAGE_SIZE
+      }).then((r) => (data = r)),
+      getSpendingOverTime({
+        query: searchQuery,
+        entity: entityIds,
+        contractor: contractorQuery,
+        service: serviceIds
+      }).then((r) => (spendingOverTime = r))
+    ]);
 
     return {
       query: searchQuery,
@@ -280,7 +292,7 @@ class Buscar extends React.Component {
                       </Link>
                     ))}
 
-                    {this.props.count > 0 ? (
+                    {this.props.count > 0 && this.props.totalPages > 1 ? (
                       <div className="text-center mt-4">
                         <Pagination
                           page={this.props.page}

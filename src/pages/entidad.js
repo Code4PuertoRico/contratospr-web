@@ -1,20 +1,69 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from '../components/head';
-import ContractsChart from '../components/contracts-chart';
+import Pagination from '../components/pagination';
+import PaginatedChart from '../components/paginated-chart';
+import SpendingOverTimeChart from '../components/spending-over-time-chart';
 import millify from '../lib/millify';
 import intcomma from '../lib/intcomma';
-import { getEntity } from '../lib/api';
+import {
+  getEntity,
+  getSpendingOverTime,
+  getContractsByEntityId,
+  getServicesByEntityId,
+  getContractorsByEntityId
+} from '../lib/api';
 import { formatDate } from '../lib/date';
 
 class Entidad extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
-    return getEntity({ slug });
+    let result = await getEntity({ slug });
+
+    let spendingOverTime = await getSpendingOverTime({
+      entity: result.entity.id
+    });
+
+    return {
+      ...result,
+      spendingOverTime
+    };
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      contracts: props.contracts,
+      services: props.services,
+      contractors: props.contractors
+    };
+  }
+
+  handlePageChange = async ({ page }) => {
+    let contracts = await getContractsByEntityId(this.props.entity.id, {
+      page
+    });
+
+    this.setState({
+      contracts
+    });
+  };
+
+  handleServicesPageChange = async ({ page }) => {
+    let services = await getServicesByEntityId(this.props.entity.id, { page });
+    this.setState({ services });
+  };
+
+  handleContractorsPageChange = async ({ page }) => {
+    let contractors = await getContractorsByEntityId(this.props.entity.id, {
+      page
+    });
+    this.setState({ contractors });
+  };
+
   render() {
-    let { entity, services, contractors, contracts } = this.props;
+    let { entity, spendingOverTime } = this.props;
+    let { contracts, services, contractors } = this.state;
 
     return (
       <div>
@@ -34,83 +83,79 @@ class Entidad extends React.Component {
             </h3>
 
             <div className="mt-4 mb-2">
-              <ContractsChart contracts={contracts} height={100} />
+              <SpendingOverTimeChart
+                dataPoints={spendingOverTime}
+                width={100}
+                height={25}
+              />
             </div>
 
             <div className="flex flex-wrap">
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h3 className="mb-2">Servicios</h3>
-                <ul className="list-reset">
-                  {services.map((service) => (
-                    <li key={service.id.toString()}>
-                      <span className="text-grey-darkest hover:text-black">
-                        {service.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light">
+                <h2 className="mt-2 mb-2 pb-2 border-b">Servicios</h2>
+                <PaginatedChart
+                  data={services}
+                  onPageChange={this.handleServicesPageChange}
+                />
+              </div>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2">
+                <h2 className="mt-2 mb-2 pb-2 border-b">Contratistas</h2>
+                <PaginatedChart
+                  data={contractors}
+                  onPageChange={this.handleContractorsPageChange}
+                />
+              </div>
+            </div>
 
-                <h3 className="mt-4 mb-2">Contratistas</h3>
-                <ul className="list-reset">
-                  {contractors.map((contractor) => (
-                    <li key={contractor.id.toString()}>
-                      <Link
-                        href={`/contratista?slug=${contractor.slug}`}
-                        as={`/contratistas/${contractor.slug}`}>
-                        <a className="text-grey-darkest hover:text-black">
-                          {contractor.name}
-                        </a>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
-                <div className="mt-2 mb-4">
-                  <h2>Contratos</h2>
-                </div>
-                <div
-                  id="contracts-list"
-                  className="sm:overflow-y-scroll sm:max-h-screen mt-2 border-t border-b">
-                  {contracts.map((contract) => (
-                    <Link
-                      href={`/contrato?slug=${contract.slug}`}
-                      as={`/contratos/${contract.slug}`}
-                      key={contract.id.toString()}>
-                      <a
-                        className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
-                        data-date={contract.date_of_grant}>
-                        <div className="text-xl font-bold text-grey-darkest">
-                          {contract.number}{' '}
-                          <span className="text-base text-grey-darker">
-                            ${millify(contract.amount_to_pay)}
+            <div className="mt-4 mb-2">
+              <h2 className="mt-2 mb-2 pb-2 border-b">Contratos</h2>
+              <div id="contracts-list" className="mt-2">
+                {contracts.results.map((contract) => (
+                  <Link
+                    href={`/contrato?slug=${contract.slug}`}
+                    as={`/contratos/${contract.slug}`}
+                    key={contract.id.toString()}>
+                    <a
+                      className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
+                      data-date={contract.date_of_grant}>
+                      <div className="text-xl font-bold text-grey-darkest">
+                        {contract.number}{' '}
+                        <span className="text-base text-grey-darker">
+                          ${millify(contract.amount_to_pay)}
+                        </span>
+                      </div>
+                      <div className="text-grey-darkest">
+                        Tipo de servicio: {contract.service.name}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Otorgado: {formatDate(contract.date_of_grant, 'short')}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Vigencia:{' '}
+                        {formatDate(contract.effective_date_from, 'short')} -{' '}
+                        {formatDate(contract.effective_date_to, 'short')}
+                      </div>
+                      <div className="text-grey-darkest">
+                        Contratistas:{' '}
+                        {contract.contractors.map((contractor) => (
+                          <span key={contractor.id.toString()}>
+                            {contractor.name}
                           </span>
-                        </div>
-                        <div className="text-grey-darkest">
-                          Tipo de servicio: {contract.service.name}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Otorgado:{' '}
-                          {formatDate(contract.date_of_grant, 'short')}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Vigencia:{' '}
-                          {formatDate(contract.effective_date_from, 'short')} -{' '}
-                          {formatDate(contract.effective_date_to, 'short')}
-                        </div>
-                        <div className="text-grey-darkest">
-                          Contratistas:{' '}
-                          {contract.contractors.map((contractor) => (
-                            <span key={contractor.id.toString()}>
-                              {contractor.name}
-                            </span>
-                          ))}
-                        </div>
-                      </a>
-                    </Link>
-                  ))}
-                </div>
+                        ))}
+                      </div>
+                    </a>
+                  </Link>
+                ))}
               </div>
+              {contracts.count > 0 && contracts.total_pages > 1 ? (
+                <div className="text-center mt-4">
+                  <Pagination
+                    page={contracts.page}
+                    pages={contracts.total_pages}
+                    onPageChange={this.handlePageChange}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -108,7 +108,7 @@ class Contratistas extends React.Component {
                 </Link>
               ))}
 
-              {this.state.count > 0 ? (
+              {this.state.count > 0 && this.state.total_pages > 1 ? (
                 <div className="text-center mt-4">
                   <Pagination
                     page={this.state.page}
