@@ -47,13 +47,20 @@ export function searchContracts({
   });
 }
 
-export function getSpendingOverTime({ query, entity, contractor, service }) {
+export function getSpendingOverTime({
+  query,
+  entityId,
+  contractorName,
+  contractorId,
+  serviceId
+}) {
   let url = `${API_URL}/contracts/spending_over_time/`;
   return fetchData(url, {
     search: query,
-    entity,
-    contractor,
-    service
+    entity_id: entityId,
+    service_id: serviceId,
+    contractor_name: contractorName,
+    contractor_id: contractorId
   });
 }
 

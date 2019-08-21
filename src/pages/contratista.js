@@ -19,7 +19,7 @@ class Contratistas extends React.Component {
     let slug = query.slug;
     let result = await getContractor({ slug });
     let spendingOverTime = await getSpendingOverTime({
-      contractor: result.contractor.id
+      contractorId: result.contractor.id
     });
 
     return { ...result, spendingOverTime };

@@ -86,9 +86,9 @@ class Buscar extends React.Component {
       }).then((r) => (data = r)),
       getSpendingOverTime({
         query: searchQuery,
-        entity: entityIds,
-        contractor: contractorQuery,
-        service: serviceIds
+        entityId: entityIds,
+        serviceId: serviceIds,
+        contractorName: contractorQuery
       }).then((r) => (spendingOverTime = r))
     ]);
 

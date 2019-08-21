@@ -21,7 +21,7 @@ class Entidad extends React.Component {
     let result = await getEntity({ slug });
 
     let spendingOverTime = await getSpendingOverTime({
-      entity: result.entity.id
+      entityId: result.entity.id
     });
 
     return {
