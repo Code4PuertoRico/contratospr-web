@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 import { searchServices } from '../../lib/api';
 
 type Props = { services: Array<any>; onChange: any };
