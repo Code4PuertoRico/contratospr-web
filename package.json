@@ -19,7 +19,7 @@
     "nprogress": "^0.2.0",
     "query-string": "^6.8.3",
     "react": "^16.8.6",
-    "react-chartjs-2": "^2.7.6",
+    "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.8.6",
     "react-select": "^3.0.5"
   },
