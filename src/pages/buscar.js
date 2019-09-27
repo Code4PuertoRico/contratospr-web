@@ -78,9 +78,9 @@ class Buscar extends React.Component {
       ...promises,
       searchContracts({
         query: searchQuery,
-        entity: entityIds,
+        entityIds: entityIds,
         contractor: contractorQuery,
-        service: serviceIds,
+        serviceIds: serviceIds,
         page,
         pageSize: PAGE_SIZE
       }).then((r) => (data = r)),

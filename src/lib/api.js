@@ -30,18 +30,18 @@ export function getHome({ fiscalYear }) {
 
 export function searchContracts({
   query,
-  entity,
+  entityIds,
   contractor,
-  service,
+  serviceIds,
   page,
   pageSize
 }) {
   let url = `${API_URL}/contracts/`;
   return fetchData(url, {
     search: query,
-    entity,
+    entity_id: entityIds,
     contractor_name: contractor,
-    service,
+    service_id: serviceIds,
     page,
     page_size: pageSize
   });
