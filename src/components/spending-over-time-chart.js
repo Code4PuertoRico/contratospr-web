@@ -19,7 +19,7 @@ function getChartData(dataPoints) {
   };
 }
 
-function SpendingOverTimeChart({ dataPoints }) {
+function SpendingOverTimeChart({ dataPoints, width, height }) {
   let chartOptions = {
     legend: {
       display: false
@@ -61,8 +61,8 @@ function SpendingOverTimeChart({ dataPoints }) {
     <>
       <Bar
         data={getChartData(dataPoints)}
-        width={100}
-        height={40}
+        width={width}
+        height={height}
         options={chartOptions}
       />
     </>
