@@ -14,6 +14,10 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   let server = express();
 
+  server.get('/about', (req, res) => {
+    return res.redirect('/sobre-nosotros');
+  });
+
   server.get('/entidades/:slug', (req, res) => {
     return app.render(req, res, '/entidad', { slug: req.params.slug });
   });

@@ -30,8 +30,13 @@ const Header = () => (
           </a>
         </Link>
         <Link href="/tendencias">
-          <a className="no-underline font-bold inline-block text-grey-darkest hover:text-black hover:underline">
+          <a className="mr-4 no-underline font-bold inline-block text-grey-darkest hover:text-black hover:underline">
             Tendencias
+          </a>
+        </Link>
+        <Link href="/sobre-nosotros">
+          <a className="no-underline font-bold inline-block text-grey-darkest hover:text-black hover:underline">
+            Sobre Nosotros
           </a>
         </Link>
       </div>
