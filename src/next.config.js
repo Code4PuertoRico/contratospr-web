@@ -9,8 +9,7 @@ module.exports = withCSS({
       ? process.env.API_URL
       : process.env.NODE_ENV === 'production'
       ? PRODUCTION_API_URL
-      : DEVELOPMENT_API_URL,
-    GA_TRACKING_ID: 'UA-37217294-9'
+      : DEVELOPMENT_API_URL
   },
   webpack: (config) => {
     // Fixes npm packages that depend on `fs` module
