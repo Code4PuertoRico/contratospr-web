@@ -21,7 +21,7 @@
     "react": "^16.10.1",
     "react-chartjs-2": "^2.8.0",
     "react-dom": "^16.10.1",
-    "react-select": "^3.0.5"
+    "react-select": "^3.0.8"
   },
   "devDependencies": {
     "@types/react": "^16.9.3",
