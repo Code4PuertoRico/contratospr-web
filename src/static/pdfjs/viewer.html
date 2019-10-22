@@ -28,15 +28,15 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>PDF.js viewer</title>
 
-    <link rel="stylesheet" href="https://pdfs.contratospr.com/web/viewer.css">
-    <link rel="resource" type="application/l10n" href="https://pdfs.contratospr.com/web/locale/locale.properties">
-    <script src="https://pdfs.contratospr.com/build/pdf.js"></script>
+    <link rel="stylesheet" href="https://pdf-viewer.contratospr.com/web/viewer.css">
+    <link rel="resource" type="application/l10n" href="https://pdf-viewer.contratospr.com/web/locale/locale.properties">
+    <script src="https://pdf-viewer.contratospr.com/build/pdf.js"></script>
     <script>
       window.addEventListener('webviewerloaded', function() {
-        window.PDFViewerApplicationOptions.set('workerSrc', 'https://pdfs.contratospr.com/build/pdf.worker.js');
+        window.PDFViewerApplicationOptions.set('workerSrc', 'https://pdf-viewer.contratospr.com/build/pdf.worker.js');
       });
     </script>
-    <script src="https://pdfs.contratospr.com/web/viewer.js"></script>
+    <script src="https://pdf-viewer.contratospr.com/web/viewer.js"></script>
   </head>
 
   <body tabindex="1" class="loadingInProgress">
@@ -389,4 +389,3 @@ See https://github.com/adobe-type-tools/cmap-resources
     <div id="printContainer"></div>
   </body>
 </html>
-
