@@ -11,7 +11,7 @@ async function fetchData(url, params = {}) {
   if (errorCode) {
     throw new ResponseError({
       statusCode: errorCode,
-      statusText: res.statusText
+      statusText: res.statusText,
     });
   }
 
@@ -34,7 +34,7 @@ export function searchContracts({
   contractor,
   serviceIds,
   page,
-  pageSize
+  pageSize,
 }) {
   let url = `${API_URL}/contracts/`;
   return fetchData(url, {
@@ -43,7 +43,7 @@ export function searchContracts({
     contractor_name: contractor,
     service_id: serviceIds,
     page,
-    page_size: pageSize
+    page_size: pageSize,
   });
 }
 
@@ -52,7 +52,7 @@ export function getSpendingOverTime({
   entityId,
   contractorName,
   contractorId,
-  serviceId
+  serviceId,
 }) {
   let url = `${API_URL}/contracts/spending_over_time/`;
   return fetchData(url, {
@@ -60,7 +60,7 @@ export function getSpendingOverTime({
     entity_id: entityId,
     service_id: serviceId,
     contractor_name: contractorName,
-    contractor_id: contractorId
+    contractor_id: contractorId,
   });
 }
 
@@ -69,7 +69,7 @@ export function getServicesByContractorId(contractorId, { page }) {
     contractor_id: contractorId,
     ordering: '-contracts_total',
     page_size: 12,
-    page
+    page,
   });
 }
 
@@ -78,7 +78,7 @@ export function getContractsByContractorId(contractorId, { page }) {
     contractor_id: contractorId,
     exclude_amendments: true,
     page_size: 12,
-    page
+    page,
   });
 }
 
@@ -93,14 +93,14 @@ export async function getContractor({ slug }) {
     ),
     getContractsByContractorId(contractor.id, { page: 1 }).then(
       (r) => (contracts = r)
-    )
+    ),
   ]);
 
   return {
     contractor,
     entities: contractor.entities,
     services: services,
-    contracts: contracts
+    contracts: contracts,
   };
 }
 
@@ -109,14 +109,14 @@ export async function searchContractors({
   entity,
   service,
   page,
-  pageSize
+  pageSize,
 }) {
   return fetchData(`${API_URL}/contractors/`, {
     search: query,
     entity,
     service,
     page,
-    page_size: pageSize
+    page_size: pageSize,
   });
 }
 
@@ -132,13 +132,13 @@ export async function getContract({ slug }) {
 
 export async function getEntitiesByIds(entityIds) {
   return fetchData(`${API_URL}/entities/`, {
-    id: entityIds
+    id: entityIds,
   });
 }
 
 export function getServicesByIds(serviceIds) {
   return fetchData(`${API_URL}/services/`, {
-    id: serviceIds
+    id: serviceIds,
   });
 }
 
@@ -147,7 +147,7 @@ export function getServicesByEntityId(entityId, { page }) {
     entity_id: entityId,
     ordering: '-contracts_total',
     page_size: 12,
-    page
+    page,
   });
 }
 
@@ -156,7 +156,7 @@ export function getContractsByEntityId(entityId, { page }) {
     entity_id: entityId,
     exclude_amendments: true,
     page_size: 12,
-    page
+    page,
   });
 }
 
@@ -165,7 +165,7 @@ export function getContractorsByEntityId(entityId, { page }) {
     entity_id: entityId,
     ordering: '-contracts_total',
     page_size: 12,
-    page
+    page,
   });
 }
 
@@ -180,14 +180,14 @@ export async function getEntity({ slug }) {
       (r) => (contractors = r)
     ),
     getContractsByEntityId(entity.id, { page: 1 }).then((r) => (contracts = r)),
-    getServicesByEntityId(entity.id, { page: 1 }).then((r) => (services = r))
+    getServicesByEntityId(entity.id, { page: 1 }).then((r) => (services = r)),
   ]);
 
   return {
     entity,
     contractors,
     contracts,
-    services
+    services,
   };
 }
 
@@ -195,7 +195,7 @@ export function searchEntities({ query, page, pageSize }) {
   return fetchData(`${API_URL}/entities/`, {
     search: query,
     page,
-    page_size: pageSize
+    page_size: pageSize,
   });
 }
 
@@ -203,7 +203,7 @@ export function searchServices({ query, page, pageSize }) {
   return fetchData(`${API_URL}/services/`, {
     search: query,
     page,
-    page_size: pageSize
+    page_size: pageSize,
   });
 }
 

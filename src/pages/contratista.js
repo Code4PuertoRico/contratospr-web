@@ -10,7 +10,7 @@ import {
   getContractor,
   getServicesByContractorId,
   getContractsByContractorId,
-  getSpendingOverTime
+  getSpendingOverTime,
 } from '../lib/api';
 import { formatDate } from '../lib/date';
 
@@ -18,38 +18,43 @@ class Contratistas extends React.Component {
   static async getInitialProps({ query }) {
     let slug = query.slug;
     let result = await getContractor({ slug });
-    let spendingOverTime = await getSpendingOverTime({
-      contractorId: result.contractor.id
-    });
 
-    return { ...result, spendingOverTime };
+    return { ...result };
   }
 
   constructor(props) {
     super(props);
     this.state = {
       services: props.services,
-      contracts: props.contracts
+      contracts: props.contracts,
+      spendingOverTime: [],
     };
+  }
+
+  async componentDidMount() {
+    let spendingOverTime = await getSpendingOverTime({
+      entityId: this.props.contractor.id,
+    });
+    this.setState({ spendingOverTime });
   }
 
   handlePageChange = async ({ page }) => {
     let contracts = await getContractsByContractorId(this.props.contractor.id, {
-      page
+      page,
     });
     this.setState({ contracts });
   };
 
   handleServicesPageChange = async ({ page }) => {
     let services = await getServicesByContractorId(this.props.contractor.id, {
-      page
+      page,
     });
     this.setState({ services });
   };
 
   render() {
-    let { contractor, entities, spendingOverTime } = this.props;
-    let { services, contracts } = this.state;
+    let { contractor, entities } = this.props;
+    let { services, contracts, spendingOverTime } = this.state;
     return (
       <div>
         <Head title={contractor.name} />

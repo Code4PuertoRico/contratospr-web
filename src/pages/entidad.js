@@ -11,7 +11,7 @@ import {
   getSpendingOverTime,
   getContractsByEntityId,
   getServicesByEntityId,
-  getContractorsByEntityId
+  getContractorsByEntityId,
 } from '../lib/api';
 import { formatDate } from '../lib/date';
 
@@ -20,13 +20,8 @@ class Entidad extends React.Component {
     let slug = query.slug;
     let result = await getEntity({ slug });
 
-    let spendingOverTime = await getSpendingOverTime({
-      entityId: result.entity.id
-    });
-
     return {
       ...result,
-      spendingOverTime
     };
   }
 
@@ -35,17 +30,25 @@ class Entidad extends React.Component {
     this.state = {
       contracts: props.contracts,
       services: props.services,
-      contractors: props.contractors
+      contractors: props.contractors,
+      spendingOverTime: [],
     };
+  }
+
+  async componentDidMount() {
+    let spendingOverTime = await getSpendingOverTime({
+      entityId: this.props.entity.id,
+    });
+    this.setState({ spendingOverTime });
   }
 
   handlePageChange = async ({ page }) => {
     let contracts = await getContractsByEntityId(this.props.entity.id, {
-      page
+      page,
     });
 
     this.setState({
-      contracts
+      contracts,
     });
   };
 
@@ -56,14 +59,14 @@ class Entidad extends React.Component {
 
   handleContractorsPageChange = async ({ page }) => {
     let contractors = await getContractorsByEntityId(this.props.entity.id, {
-      page
+      page,
     });
     this.setState({ contractors });
   };
 
   render() {
-    let { entity, spendingOverTime } = this.props;
-    let { contracts, services, contractors } = this.state;
+    let { entity } = this.props;
+    let { contracts, services, contractors, spendingOverTime } = this.state;
 
     return (
       <div>
