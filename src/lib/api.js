@@ -5,7 +5,13 @@ import { ResponseError } from '../lib/errors';
 const API_URL = process.env.API_URL;
 
 async function fetchData(url, params = {}) {
-  let res = await fetch(`${url}?${queryString.stringify(params)}`);
+  let res = await fetch(`${url}?${queryString.stringify(params)}`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
   let errorCode = res.status > 200 ? res.status : null;
 
   if (errorCode) {
