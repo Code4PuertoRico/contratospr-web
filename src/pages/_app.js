@@ -5,6 +5,8 @@ import NProgress from 'nprogress';
 import Layout from '../layouts/main';
 import { pageview } from '../lib/gtag';
 
+import '../styles/app.css';
+
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeError', () => NProgress.done());
 Router.events.on('routeChangeComplete', (url) => {

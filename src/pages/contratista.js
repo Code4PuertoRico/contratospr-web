@@ -33,7 +33,7 @@ class Contratistas extends React.Component {
 
   async componentDidMount() {
     let spendingOverTime = await getSpendingOverTime({
-      entityId: this.props.contractor.id,
+      contractorId: this.props.contractor.id,
     });
     this.setState({ spendingOverTime });
   }
@@ -60,9 +60,11 @@ class Contratistas extends React.Component {
         <Head title={contractor.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
-            <h2 className="mb-1 text-grey-darkest">{contractor.name}</h2>
+            <h2 className="mb-1 text-2xl font-semibold text-gray-800">
+              {contractor.name}
+            </h2>
 
-            <h3 className="mb-2 text-grey-darker">
+            <h3 className="mb-2 text-xl font-bold text-gray-600">
               <span className="font-bold">
                 {intcomma(contractor.contracts_count)}
               </span>{' '}
@@ -81,22 +83,22 @@ class Contratistas extends React.Component {
             </div>
 
             <div className="flex flex-wrap">
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h3 className="mb-2">Servicios</h3>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-gray-200 text-lg text-gray-800">
+                <h3 className="mb-2 text-2xl font-bold">Servicios</h3>
                 <PaginatedChart
                   data={services}
                   onPageChange={this.handleContractorsPageChange}
                 />
               </div>
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
-                <h3 className="mt-4 mb-2">Entidades</h3>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-gray-800">
+                <h3 className="mt-4 mb-2 text-2xl font-bold">Entidades</h3>
                 <ul className="list-reset">
                   {entities.map((entity) => (
                     <li key={entity.id.toString()}>
                       <Link
                         href={`/entidad?slug=${entity.slug}`}
                         as={`/entidades/${entity.slug}`}>
-                        <a className="text-grey-darkest hover:text-black">
+                        <a className="underline text-gray-800 hover:text-black">
                           {entity.name}
                         </a>
                       </Link>
@@ -108,7 +110,7 @@ class Contratistas extends React.Component {
 
             <div className="mt-2 mb-4">
               <div className="mt-2 mb-4">
-                <h2>Contratos</h2>
+                <h2 className="text-2xl font-bold">Contratos</h2>
               </div>
 
               <div id="contracts-list" className="mt-2 border-t border-b">
@@ -118,24 +120,24 @@ class Contratistas extends React.Component {
                     as={`/contratos/${contract.slug}`}
                     key={contract.id.toString()}>
                     <a
-                      className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
+                      className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100"
                       data-date={contract.date_of_grant}>
-                      <div className="text-xl font-bold text-grey-darkest">
+                      <div className="text-xl font-bold text-gray-800">
                         {contract.number}{' '}
-                        <span className="text-base text-grey-darker">
+                        <span className="text-base text-gray-600">
                           ${millify(contract.amount_to_pay)}
                         </span>
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Tipo de servicio: {contract.service.name}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Entidad: {contract.entity.name}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Otorgado: {formatDate(contract.date_of_grant, 'short')}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Vigencia:{' '}
                         {formatDate(contract.effective_date_from, 'short')} -{' '}
                         {formatDate(contract.effective_date_to, 'short')}

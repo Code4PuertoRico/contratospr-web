@@ -8,20 +8,20 @@ type Props = { services: Array<any>; onChange: any };
 class ServiceSelect extends React.PureComponent<Props> {
   static propTypes = {
     services: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
   };
 
   loadServiceOptions = async (inputValue: string) => {
     let data = await searchServices({
       query: inputValue,
       page: 1,
-      pageSize: 20
+      pageSize: 20,
     });
 
     return data.results.map((service: { id: string; name: string }) => {
       return {
         value: service.id,
-        label: service.name
+        label: service.name,
       };
     });
   };

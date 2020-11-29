@@ -24,7 +24,7 @@ export function getChartData(contracts) {
     chartData.push({
       x: date,
       y: amounts.reduce((total, amount) => total + amount),
-      contracts: amounts.length
+      contracts: amounts.length,
     });
   }
 
@@ -41,26 +41,26 @@ function ContractsChart({ height, contracts }) {
         pointBackgroundColor: data.map(() => DEFAULT_POINT_BG_COLOR),
         pointRadius: data.map(() => DEFAULT_POINT_RADIUS),
         fill: true,
-        data: data
-      }
-    ]
+        data: data,
+      },
+    ],
   };
 
   let chartOptions = {
     legend: {
-      display: false
+      display: false,
     },
     tooltips: {
       displayColors: false,
       callbacks: {
-        label: function(item, data) {
+        label: function (item, data) {
           let contracts = data.datasets[0].data[item.index].contracts;
           return [
             'Contratos: ' + contracts,
-            'Total: $' + intcomma(item.yLabel)
+            'Total: $' + intcomma(item.yLabel),
           ];
-        }
-      }
+        },
+      },
     },
     scales: {
       xAxes: [
@@ -68,9 +68,9 @@ function ContractsChart({ height, contracts }) {
           display: true,
           type: 'time',
           time: {
-            tooltipFormat: 'll'
-          }
-        }
+            tooltipFormat: 'll',
+          },
+        },
       ],
       yAxes: [
         {
@@ -78,14 +78,14 @@ function ContractsChart({ height, contracts }) {
           ticks: {
             beginAtZero: true,
             maxTicksLimit: 5,
-            callback: function(value) {
+            callback: function (value) {
               return '$' + millify(value);
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     },
-    onClick: function(e) {
+    onClick: function (e) {
       let firstPoint = this.getElementAtEvent(e)[0];
       let dataset = this.data.datasets[0];
 
@@ -105,7 +105,7 @@ function ContractsChart({ height, contracts }) {
         dataset.pointRadius[firstPoint._index] = SELECTED_POINT_RADIUS;
         this.update({ duration: 0 });
 
-        contracts.forEach(function(contract) {
+        contracts.forEach(function (contract) {
           if (value.x === contract.getAttribute('data-date')) {
             contract.style.display = '';
           } else {
@@ -117,11 +117,11 @@ function ContractsChart({ height, contracts }) {
         dataset.pointRadius = data.map(() => DEFAULT_POINT_RADIUS);
         this.update({ duration: 0 });
 
-        contracts.forEach(function(contract) {
+        contracts.forEach(function (contract) {
           contract.style.display = '';
         });
       }
-    }
+    },
   };
 
   return (
@@ -133,7 +133,7 @@ function ContractsChart({ height, contracts }) {
 
 ContractsChart.propTypes = {
   contracts: PropTypes.array,
-  height: PropTypes.number
+  height: PropTypes.number,
 };
 
 export default ContractsChart;

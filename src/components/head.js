@@ -49,7 +49,7 @@ const Head = (props) => (
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_TRACKING_ID}');
-          `
+          `,
       }}
     />
   </NextHead>
@@ -59,7 +59,7 @@ Head.propTypes = {
   title: string,
   description: string,
   url: string,
-  ogImage: string
+  ogImage: string,
 };
 
 export default React.memo(Head);

@@ -4,8 +4,6 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import WorkInProgressNotice from '../components/wip-notice';
 
-import '../styles/app.css';
-
 const MainLayout = ({ children }) => (
   <div>
     <WorkInProgressNotice />
@@ -20,8 +18,8 @@ const MainLayout = ({ children }) => (
 MainLayout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)
-  ]).isRequired
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
 };
 
 export default React.memo(MainLayout);

@@ -73,9 +73,11 @@ class Entidad extends React.Component {
         <Head title={entity.name} />
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
-            <h2 className="mb-1 text-grey-darkest">{entity.name}</h2>
+            <h2 className="mb-1 text-2xl font-bold text-gray-800">
+              {entity.name}
+            </h2>
 
-            <h3 className="mb-2 text-grey-darker">
+            <h3 className="mb-2 text-xl text-gray-800">
               <span className="font-bold">
                 {intcomma(entity.contracts_count)}
               </span>{' '}
@@ -94,15 +96,19 @@ class Entidad extends React.Component {
             </div>
 
             <div className="flex flex-wrap">
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light">
-                <h2 className="mt-2 mb-2 pb-2 border-b">Servicios</h2>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-gray-200">
+                <h2 className="mt-2 mb-2 pb-2 text-2xl font-bold border-b">
+                  Servicios
+                </h2>
                 <PaginatedChart
                   data={services}
                   onPageChange={this.handleServicesPageChange}
                 />
               </div>
               <div className="w-full sm:flex-1 px-4 py-2 m-2">
-                <h2 className="mt-2 mb-2 pb-2 border-b">Contratistas</h2>
+                <h2 className="mt-2 mb-2 pb-2 text-2xl font-bold border-b">
+                  Contratistas
+                </h2>
                 <PaginatedChart
                   data={contractors}
                   onPageChange={this.handleContractorsPageChange}
@@ -111,7 +117,9 @@ class Entidad extends React.Component {
             </div>
 
             <div className="mt-4 mb-2">
-              <h2 className="mt-2 mb-2 pb-2 border-b">Contratos</h2>
+              <h2 className="mt-2 mb-2 pb-2 text-2xl font-bold border-b">
+                Contratos
+              </h2>
               <div id="contracts-list" className="mt-2">
                 {contracts.results.map((contract) => (
                   <Link
@@ -119,26 +127,26 @@ class Entidad extends React.Component {
                     as={`/contratos/${contract.slug}`}
                     key={contract.id.toString()}>
                     <a
-                      className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest"
+                      className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100"
                       data-date={contract.date_of_grant}>
-                      <div className="text-xl font-bold text-grey-darkest">
+                      <div className="text-xl font-bold text-gray-800">
                         {contract.number}{' '}
-                        <span className="text-base text-grey-darker">
+                        <span className="text-base text-gray-600">
                           ${millify(contract.amount_to_pay)}
                         </span>
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Tipo de servicio: {contract.service.name}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Otorgado: {formatDate(contract.date_of_grant, 'short')}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Vigencia:{' '}
                         {formatDate(contract.effective_date_from, 'short')} -{' '}
                         {formatDate(contract.effective_date_to, 'short')}
                       </div>
-                      <div className="text-grey-darkest">
+                      <div className="text-gray-800">
                         Contratistas:{' '}
                         {contract.contractors.map((contractor) => (
                           <span key={contractor.id.toString()}>

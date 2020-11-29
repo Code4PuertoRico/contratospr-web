@@ -8,41 +8,59 @@ class SobreNosotros extends React.Component {
         <Head title="Sobre Nosotros" />
         <div className="my-4">
           <div className="w-full px-4 py-2">
-            <h1 className="mb-4 text-2xl">Sobre Nosotros</h1>
+            <h1 className="mb-4 text-2xl font-bold">Sobre Nosotros</h1>
 
             <p className="mb-2">
               Este proyecto es una acción comunitaría que intenta hacer la data
               del sistema de{' '}
-              <a href="https://consultacontratos.ocpr.gov.pr">
+              <a
+                href="https://consultacontratos.ocpr.gov.pr"
+                className="text-blue-700 underline">
                 Consulta de Contratos
               </a>{' '}
               más accesible.
             </p>
 
-            <h2 className="mb-2 text-xl">Recursos</h2>
-            <ul className="mb-2">
+            <h2 className="mb-2 text-xl font-bold">Recursos</h2>
+            <ul className="list-disc pl-4 mb-2">
               <li>
-                <a href="https://github.com/theindexingproject/contratospr-api">
+                <a
+                  href="https://github.com/theindexingproject/contratospr-api"
+                  className="text-blue-700 underline">
                   GitHub (contratospr-api)
                 </a>
               </li>
               <li>
-                <a href="https://github.com/theindexingproject/contratospr">
+                <a
+                  href="https://github.com/theindexingproject/contratospr"
+                  className="text-blue-700 underline">
                   GitHub (contratospr)
                 </a>
               </li>
               <li>
-                <a href="https://spectrum.chat/contratospr">Spectrum</a>
+                <a
+                  href="https://spectrum.chat/contratospr"
+                  className="text-blue-700 underline">
+                  Spectrum
+                </a>
               </li>
               <li>
-                <a href="http://api.contratospr.com/v1/">API v1</a>
+                <a
+                  href="http://api.contratospr.com/v1/"
+                  className="text-blue-700 underline">
+                  API v1
+                </a>
               </li>
               <li>
-                <a href="https://api.contratospr.com/v1/docs/">Docs API v1</a>
+                <a
+                  href="https://api.contratospr.com/v1/docs/"
+                  className="text-blue-700 underline">
+                  Docs API v1
+                </a>
               </li>
             </ul>
 
-            <h2 className="mb-2 text-xl">
+            <h2 className="mb-2 text-xl font-bold">
               ¿Comó hacemos que la data sea mas accesible?
             </h2>
             <p className="mb-2">
@@ -57,7 +75,9 @@ class SobreNosotros extends React.Component {
               archivo y su meta data, es utilizada en nuestra busqueda.
             </p>
 
-            <h2 className="mb-2 text-xl">¿Cuán maduro esta el proyecto?</h2>
+            <h2 className="mb-2 text-xl font-bold">
+              ¿Cuán maduro esta el proyecto?
+            </h2>
             <p className="mb-2">
               Estamos en los comienzos del mismo. Aunque sacamos nuestra data
               diractamente de Consulta de Contratos, no somos la fuente oficial
@@ -69,35 +89,43 @@ class SobreNosotros extends React.Component {
               en especial de una manera programatica.
             </p>
 
-            <h2 className="mb-2 text-xl">
+            <h2 className="mb-2 text-xl font-bold">
               ¿Que planes se tienen con este proyecto?
             </h2>
             <p className="mb-2">
               Lo mejor sería ir a nuestro repositorio para{' '}
-              <a href="https://github.com/theindexingproject/contratospr-api">
+              <a
+                href="https://github.com/theindexingproject/contratospr-api"
+                className="text-blue-700 underline">
                 nuestro API
               </a>{' '}
               y{' '}
-              <a href="https://github.com/theindexingproject/contratospr">
+              <a
+                href="https://github.com/theindexingproject/contratospr"
+                className="text-blue-700 underline">
                 nuestro frontend
               </a>
               .
             </p>
 
-            <h2 className="mb-2 text-xl">¿Comó puedo ayudar?</h2>
+            <h2 className="mb-2 text-xl font-bold">¿Comó puedo ayudar?</h2>
             <p className="mb-2">
               Utiliza nuestros proyectos y dejanos saber como mejorar o que
               errores encuentras. Si quieres trabajar sobre el codigo visita los
               proyectos:
             </p>
-            <ul className="mb-2">
+            <ul className="mb-2 list-disc pl-4">
               <li>
-                <a href="https://github.com/theindexingproject/contratospr-api">
+                <a
+                  href="https://github.com/theindexingproject/contratospr-api"
+                  className="text-blue-700 underline">
                   nuestro API
                 </a>
               </li>
               <li>
-                <a href="https://github.com/theindexingproject/contratospr">
+                <a
+                  href="https://github.com/theindexingproject/contratospr"
+                  className="text-blue-700 underline">
                   nuestro frontend
                 </a>
               </li>
