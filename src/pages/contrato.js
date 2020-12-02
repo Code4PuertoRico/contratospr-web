@@ -19,8 +19,8 @@ class Contratos extends React.Component {
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
             <div className="flex flex-wrap">
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
-                <h2 className="mb-2">{this.props.number}</h2>
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 border-none border-r sm:border-solid sm:border-gray-200 text-lg text-gray-800">
+                <h2 className="mb-2 text-2xl font-bold">{this.props.number}</h2>
 
                 {this.props.parent ? (
                   <>
@@ -30,7 +30,7 @@ class Contratos extends React.Component {
                       <Link
                         href={`/contrato?slug=${this.props.parent.slug}`}
                         as={`/contratos/${this.props.parent.slug}`}>
-                        <a className="text-grey-darkest hover:text-black">
+                        <a className="text-gray-800 underline hover:text-black">
                           Contrato original
                         </a>
                       </Link>
@@ -52,7 +52,7 @@ class Contratos extends React.Component {
                   <Link
                     href={`/entidad?slug=${this.props.entity.slug}`}
                     as={`/entidades/${this.props.entity.slug}`}>
-                    <a className="text-grey-darkest hover:text-black">
+                    <a className="text-gray-800 underline hover:text-black">
                       {this.props.entity.name}
                     </a>
                   </Link>
@@ -76,7 +76,7 @@ class Contratos extends React.Component {
                           <Link
                             href={`/contrato?slug=${contract.slug}`}
                             as={`/contratos/${contract.slug}`}>
-                            <a className="text-grey-darkest hover:text-black">
+                            <a className="text-gray-800 underline hover:text-black">
                               {contract.number} - {contract.amendment}
                             </a>
                           </Link>
@@ -86,14 +86,14 @@ class Contratos extends React.Component {
                   </>
                 ) : null}
 
-                <h3 className="mt-4 mb-2">Contratistas</h3>
+                <p className="font-bold">Contratistas</p>
                 <ul className="list-reset">
                   {this.props.contractors.map((contractor) => (
                     <li key={contractor.id.toString()}>
                       <Link
                         href={`/contratista?slug=${contractor.slug}`}
                         as={`/contratistas/${contractor.slug}`}>
-                        <a className="text-grey-darkest hover:text-black">
+                        <a className="text-gray-800 underline hover:text-black">
                           {contractor.name}
                         </a>
                       </Link>
@@ -101,19 +101,19 @@ class Contratos extends React.Component {
                   ))}
                 </ul>
               </div>
-              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-grey-darkest">
+              <div className="w-full sm:flex-1 px-4 py-2 m-2 text-lg text-gray-800">
                 <div className="flex justify-between items-center mb-2 border-b">
                   <div className="flex-1">
-                    <h2>Documento</h2>
+                    <h2 className="text-2xl font-bold">Documento</h2>
                   </div>
 
                   {this.props.document ? (
-                    <div className="flex-1 text-right">
+                    <div className="text-right">
                       <a
                         href={this.props.document.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="no-underline bg-grey-light hover:bg-grey text-grey-darkest font-bold py-1 px-2 rounded">
+                        className="block no-underline bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 mb-2 rounded">
                         <svg
                           className="fill-current w-4 h-4"
                           xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ class Contratos extends React.Component {
                     <PDFViewer src={this.props.document.file} />
                   ) : (
                     <div
-                      className="bg-orange-lightest border-l-4 border-orange text-sm text-orange-dark p-4"
+                      className="bg-yellow-100 border-l-4 border-yellow-500 text-sm text-yellow-700 p-4"
                       role="alert">
                       <p>Aún no tenemos copia del contrato.</p>
                     </div>

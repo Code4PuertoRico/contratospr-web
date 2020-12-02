@@ -15,11 +15,11 @@ function getChartData(data) {
           return {
             y: item.name,
             x: item.contracts_total,
-            count: item.contracts_count
+            count: item.contracts_count,
           };
-        })
-      }
-    ]
+        }),
+      },
+    ],
   };
 }
 
@@ -29,16 +29,16 @@ class PaginatedChart extends React.PureComponent {
 
     let chartOptions = {
       legend: {
-        display: false
+        display: false,
       },
       tooltips: {
         displayColors: false,
         callbacks: {
-          label: function(item, data) {
+          label: function (item, data) {
             let count = data.datasets[0].data[item.index].count;
             return ['Contratos: ' + count, 'Total: $' + intcomma(item.xLabel)];
-          }
-        }
+          },
+        },
       },
       scales: {
         xAxes: [
@@ -46,25 +46,25 @@ class PaginatedChart extends React.PureComponent {
             display: true,
             ticks: {
               beginAtZero: true,
-              callback: function(value) {
+              callback: function (value) {
                 return '$' + millify(value);
-              }
-            }
-          }
+              },
+            },
+          },
         ],
         yAxes: [
           {
             display: true,
             ticks: {
-              callback: function(value) {
+              callback: function (value) {
                 return value.length > 20
                   ? value.substring(0, 20) + '...'
                   : value;
-              }
-            }
-          }
-        ]
-      }
+              },
+            },
+          },
+        ],
+      },
     };
 
     return (

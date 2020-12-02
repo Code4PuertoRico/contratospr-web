@@ -1,7 +1,7 @@
 import React from 'react';
 
 const WorkInProgressNotice = () => (
-  <div className="p-1 px-2 border-b bg-yellow">
+  <div className="p-1 px-2 border-b bg-yellow-200">
     <span className="font-bold">Nota: </span>
     Trabajo en progreso; datos pueden estár incompletos, confirmar en{' '}
     <a className="text-black" href="https://consultacontratos.ocpr.gov.pr/">

@@ -11,7 +11,7 @@ import {
   searchContracts,
   getEntitiesByIds,
   getServicesByIds,
-  getSpendingOverTime
+  getSpendingOverTime,
 } from '../lib/api';
 import EntitySelect from '../components/select/entity';
 import ServiceSelect from '../components/select/service';
@@ -35,7 +35,7 @@ class Buscar extends React.Component {
         entities: [],
         contractor: '',
         services: [],
-        spendingOverTime: []
+        spendingOverTime: [],
       };
     }
 
@@ -51,7 +51,7 @@ class Buscar extends React.Component {
           entities = r.results.map((entity) => {
             return {
               value: entity.id,
-              label: entity.name
+              label: entity.name,
             };
           });
         })
@@ -64,7 +64,7 @@ class Buscar extends React.Component {
           services = r.results.map((service) => {
             return {
               value: service.id,
-              label: service.name
+              label: service.name,
             };
           });
         })
@@ -82,14 +82,14 @@ class Buscar extends React.Component {
         contractor: contractorQuery,
         serviceIds: serviceIds,
         page,
-        pageSize: PAGE_SIZE
+        pageSize: PAGE_SIZE,
       }).then((r) => (data = r)),
       getSpendingOverTime({
         query: searchQuery,
         entityId: entityIds,
         serviceId: serviceIds,
-        contractorName: contractorQuery
-      }).then((r) => (spendingOverTime = r))
+        contractorName: contractorQuery,
+      }).then((r) => (spendingOverTime = r)),
     ]);
 
     return {
@@ -101,7 +101,7 @@ class Buscar extends React.Component {
       entities,
       contractor: contractorQuery,
       services,
-      spendingOverTime
+      spendingOverTime,
     };
   }
 
@@ -109,7 +109,7 @@ class Buscar extends React.Component {
     super(props);
     this.state = {
       entities: props.entities,
-      services: props.services
+      services: props.services,
     };
   }
 
@@ -128,7 +128,7 @@ class Buscar extends React.Component {
   handlePageChange = async ({ page }) => {
     let routeQuery = {
       q: this.props.query,
-      page
+      page,
     };
 
     if (this.props.contractor) {
@@ -145,7 +145,7 @@ class Buscar extends React.Component {
 
     await Router.push({
       pathname: '/buscar',
-      query: routeQuery
+      query: routeQuery,
     });
 
     window.scrollTo(0, 0);
@@ -154,7 +154,7 @@ class Buscar extends React.Component {
 
   handleSubmit = () => {
     let routeQuery = {
-      q: this.queryInput.value
+      q: this.queryInput.value,
     };
 
     if (this.contractorInput.value) {
@@ -171,7 +171,7 @@ class Buscar extends React.Component {
 
     Router.push({
       pathname: '/buscar',
-      query: routeQuery
+      query: routeQuery,
     });
   };
 
@@ -182,7 +182,7 @@ class Buscar extends React.Component {
         <div className="flex self-start justify-center">
           <div className="w-full mb-4">
             <div className="flex flex-wrap">
-              <div className="w-full sm:w-1/3 px-4 py-2 border-none border-r sm:border-solid sm:border-grey-light text-lg text-grey-darkest">
+              <div className="w-full sm:w-1/3 px-4 py-2 border-none border-r sm:border-solid sm:border-gray-200 text-lg text-gray-800">
                 <form
                   action="/buscar"
                   method="GET"
@@ -193,7 +193,7 @@ class Buscar extends React.Component {
                   <div className="mb-2 text-sm">
                     <p className="text-sm">Palabra clave</p>
                     <input
-                      className="w-full py-2 px-3 mr-4 appearance-none border rounded text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
+                      className="w-full py-2 px-3 mr-4 appearance-none border rounded text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
                       type="text"
                       defaultValue={this.props.query}
                       ref={(node) => (this.queryInput = node)}
@@ -203,7 +203,7 @@ class Buscar extends React.Component {
                   <div className="mb-2 text-sm">
                     <p className="text-sm">Contratistas</p>
                     <input
-                      className="w-full py-2 px-3 mr-4 appearance-none border rounded text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
+                      className="w-full py-2 px-3 mr-4 appearance-none border rounded text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
                       type="text"
                       defaultValue={this.props.contractor}
                       ref={(node) => (this.contractorInput = node)}
@@ -216,7 +216,7 @@ class Buscar extends React.Component {
                       entities={this.props.entities}
                       onChange={(options) => {
                         this.setState({
-                          entities: options
+                          entities: options,
                         });
                       }}
                     />
@@ -228,22 +228,22 @@ class Buscar extends React.Component {
                       services={this.props.services}
                       onChange={(options) => {
                         this.setState({
-                          services: options
+                          services: options,
                         });
                       }}
                     />
                   </div>
                   <div className="mt-4 text-sm">
                     <button
-                      className="py-2 px-4 bg-blue hover:bg-blue-dark text-white font-bold rounded focus:outline-none focus:shadow-outline"
+                      className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline"
                       type="submit">
                       Buscar
                     </button>
                   </div>
                 </form>
               </div>
-              <div className="w-full sm:w-2/3 px-4 py-2 text-lg text-grey-darkest">
-                <div className="w-full max-w-lg mb-4">
+              <div className="w-full sm:w-2/3 px-4 py-2 text-lg text-gray-800">
+                <div className="w-full max-w-3xl mb-4">
                   <SpendingOverTimeChart
                     dataPoints={this.props.spendingOverTime}
                     width={100}
@@ -252,7 +252,7 @@ class Buscar extends React.Component {
                   <div className="mt-4">
                     <p>
                       Se encontraron{' '}
-                      <span className="font-bold text-grey-darkest">
+                      <span className="font-bold text-gray-800">
                         {intcomma(this.props.count)}
                       </span>{' '}
                       contratos.
@@ -264,23 +264,23 @@ class Buscar extends React.Component {
                         href={`/contratos?slug=${contract.slug}`}
                         as={`/contratos/${contract.slug}`}
                         key={contract.id.toString()}>
-                        <a className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest">
-                          <div className="text-xl font-bold text-grey-darkest">
+                        <a className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100">
+                          <div className="text-xl font-bold text-gray-800">
                             {contract.number}{' '}
-                            <span className="text-base text-grey-darker">
+                            <span className="text-base text-gray-600">
                               ${millify(contract.amount_to_pay)}
                             </span>
                           </div>
-                          <div className="text-grey-darkest">
+                          <div className="text-gray-800">
                             Tipo de servicio: {contract.service.name}
                           </div>
-                          <div className="text-grey-darkest">
+                          <div className="text-gray-800">
                             Entidad: {contract.entity.name}
                           </div>
-                          <div className="text-grey-darkest">
+                          <div className="text-gray-800">
                             Otorgado: {formatDate(contract.date_of_grant)}
                           </div>
-                          <div className="text-grey-darkest">
+                          <div className="text-gray-800">
                             Contratistas:{' '}
                             {contract.contractors.map((contractor) => (
                               <span key={contractor.id.toString()}>

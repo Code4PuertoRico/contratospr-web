@@ -17,7 +17,7 @@ class Contratistas extends React.Component {
     let data = await searchContractors({
       query: searchQuery,
       page,
-      pageSize: PAGE_SIZE
+      pageSize: PAGE_SIZE,
     });
 
     return Object.assign({ query: searchQuery, page }, data);
@@ -31,7 +31,7 @@ class Contratistas extends React.Component {
       page: props.page || 1,
       count: props.count || 0,
       total_pages: props.total_pages || 1,
-      results: props.results || []
+      results: props.results || [],
     };
   }
 
@@ -47,7 +47,7 @@ class Contratistas extends React.Component {
   handlePageChange = async ({ page }) => {
     await Router.push({
       pathname: '/contratistas',
-      query: { q: this.state.query, page }
+      query: { q: this.state.query, page },
     });
 
     window.scrollTo(0, 0);
@@ -57,7 +57,7 @@ class Contratistas extends React.Component {
   handleSubmit = ({ query }) => {
     Router.push({
       pathname: '/contratistas',
-      query: { q: query }
+      query: { q: query },
     });
   };
 
@@ -66,7 +66,7 @@ class Contratistas extends React.Component {
       <div>
         <Head title="Contratistas" />
         <div className="flex self-start justify-center">
-          <div className="w-full max-w-lg mb-4">
+          <div className="w-full max-w-3xl mb-4">
             <Search
               query={this.state.query}
               onSubmit={this.handleSubmit}
@@ -75,7 +75,7 @@ class Contratistas extends React.Component {
             <div className="mt-4">
               <p>
                 Se encontraron{' '}
-                <span className="font-bold text-grey-darkest">
+                <span className="font-bold text-gray-800">
                   {intcomma(this.state.count)}
                 </span>{' '}
                 entidades.
@@ -88,17 +88,17 @@ class Contratistas extends React.Component {
                   href={`/contratista?slug=${contractor.slug}`}
                   as={`/contratistas/${contractor.slug}`}
                   key={contractor.id.toString()}>
-                  <a className="block py-4 border-b border-grey-light no-underline hover:bg-grey-lightest">
-                    <div className="text-xl font-bold text-grey-darkest">
+                  <a className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100">
+                    <div className="text-xl font-bold text-gray-800">
                       {contractor.name}
                     </div>
-                    <div className="text-grey-darkest">
+                    <div className="text-gray-800">
                       Contratos: {intcomma(contractor.contracts_count)}
                     </div>
-                    <div className="text-grey-darkest">
+                    <div className="text-gray-800">
                       Cuantía: ${millify(contractor.contracts_total)}
                     </div>
-                    <div className="text-grey-darkest">
+                    <div className="text-gray-800">
                       Entidades:{' '}
                       {contractor.entities.map((entity) => (
                         <span key={entity.id.toString()}>{entity.name} </span>

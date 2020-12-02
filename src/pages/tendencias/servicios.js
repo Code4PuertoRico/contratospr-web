@@ -16,21 +16,21 @@ class Servicios extends React.Component {
         <ul className="list-reset flex border-b">
           <li className="-mb-px mr-1">
             <Link href="/tendencias">
-              <a className="no-underline bg-white inline-block py-2 px-4 text-blue hover:underline hover:text-blue-darker font-semibold">
+              <a className="no-underline bg-white inline-block py-2 px-4 text-blue hover:underline hover:text-blue-800 font-semibold">
                 Datos Generales
               </a>
             </Link>
           </li>
           <li className="mr-1">
             <Link href="/tendencias/servicios">
-              <a className="no-underline bg-white inline-block py-2 px-4 text-blue-darker hover:underline hover:text-blue-darker font-semibold">
+              <a className="no-underline bg-white inline-block py-2 px-4 text-blue-800 hover:underline hover:text-blue-800 font-semibold">
                 Servicios
               </a>
             </Link>
           </li>
         </ul>
 
-        <h2 id="servicios" className="p-2 sm:mt-4">
+        <h2 id="servicios" className="text-2xl font-bold p-2 sm:mt-4">
           Servicios
         </h2>
         <div className="flex items-center justify-center mt-8 sm:mt-4">

@@ -9,7 +9,7 @@ class Pagination extends React.PureComponent {
   static propTypes = {
     page: PropTypes.number.isRequired,
     pages: PropTypes.number.isRequired,
-    onPageChange: PropTypes.func.isRequired
+    onPageChange: PropTypes.func.isRequired,
   };
 
   handlePageChange = (e, { page }) => {
@@ -34,7 +34,7 @@ class Pagination extends React.PureComponent {
         {showPrevious ? (
           <a
             href="#"
-            className="no-underline text-blue hover:text-blue-darker mr-2"
+            className="no-underline text-blue-700 hover:text-blue-800 mr-2"
             onClick={(e) =>
               this.handlePageChange(e, { page: this.props.page - 1 })
             }>
@@ -45,11 +45,11 @@ class Pagination extends React.PureComponent {
         {getPageRange(this.props.pages).map((page) => (
           <React.Fragment key={page.toString()}>
             {this.showCurrentPage(page) ? (
-              <span className="font-bold text-blue-darker mr-2">{page}</span>
+              <span className="font-bold text-blue-800 mr-2">{page}</span>
             ) : this.showAdjacentPage(page) ? (
               <a
                 href="#"
-                className="no-underline text-blue hover:text-blue-darker mr-2"
+                className="no-underline text-blue-700 hover:text-blue-800 mr-2"
                 onClick={(e) => this.handlePageChange(e, { page })}>
                 {page}
               </a>
@@ -60,7 +60,7 @@ class Pagination extends React.PureComponent {
         {showNext ? (
           <a
             href="#"
-            className="no-underline text-blue hover:text-blue-darker"
+            className="no-underline text-blue-700 hover:text-blue-800"
             onClick={(e) =>
               this.handlePageChange(e, { page: this.props.page + 1 })
             }>

@@ -5,10 +5,7 @@
     "prettier/react",
     "plugin:react/recommended"
   ],
-  "plugins": [
-    "prefer-let",
-    "react"
-  ],
+  "plugins": ["prefer-let", "react"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 9,
