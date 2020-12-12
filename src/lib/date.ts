@@ -5,6 +5,7 @@ import es from 'date-fns/locale/es';
 const DATE_FORMATS: { [key: string]: string } = {
   default: "d 'de' MMMM 'de' yyyy",
   short: 'd/MMM/yyyy',
+  shortTime: 'd/MMM/yyyy hh:mm a'
 };
 
 export function formatDate(
