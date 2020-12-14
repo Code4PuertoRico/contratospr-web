@@ -88,7 +88,7 @@ class CollectionArtifact extends React.Component {
           <CollectionArtifactLink
             key={this.props.key}
             linkHref={artifact.data.source_url}
-            text={`Document ${artifact.data.source_id}`}
+            text={`Documento ${artifact.data.source_id}`}
             created={artifact.created}
           />
         );
