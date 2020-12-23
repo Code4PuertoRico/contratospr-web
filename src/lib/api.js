@@ -220,3 +220,11 @@ export function getGeneralTrends() {
 export function getServiceTrends() {
   return fetchData(`${API_URL}/pages/trends/services/`);
 }
+
+export async function getCollectionJobs() {
+  return fetchData(`${API_URL}/collection-jobs/`);
+}
+
+export async function getCollectionJob({ collectionJobId }) {
+  return fetchData(`${API_URL}/collection-jobs/${collectionJobId}`);
+}

@@ -30,6 +30,10 @@ app.prepare().then(() => {
     return app.render(req, res, '/contrato', { slug: req.params.slug });
   });
 
+  server.get('/colecciones-de-datos/:id', (req, res) => {
+    return app.render(req, res, '/coleccion-de-datos', { id: req.params.id });
+  });
+
   server.get('/_api/document', (req, res) => {
     // TODO Only proxy expected URLs
     let adapter = req.query.url.startsWith('https') ? https : http;

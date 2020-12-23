@@ -34,6 +34,11 @@ const Header = () => (
             Tendencias
           </a>
         </Link>
+        <Link href="/colecciones-de-datos">
+          <a className="mr-4 no-underline font-bold inline-block text-gray-800 hover:text-black hover:underline">
+            Datos
+          </a>
+        </Link>
         <Link href="/sobre-nosotros">
           <a className="no-underline font-bold inline-block text-gray-800 hover:text-black hover:underline">
             Sobre Nosotros
