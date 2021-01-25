@@ -129,13 +129,13 @@ class CollectionJob extends React.Component {
         res.end();
         return;
       } else {
-        await Router.push({
-          pathname: '/colecciones-de-datos/[id]/[type]',
-          query: {
-            id: query.id,
-            type: 'contratos',
+        await Router.push(
+          {
+            pathname: `/coleccion-de-datos`,
+            query: { id: query.id, type: 'contract' },
           },
-        });
+          `/colecciones-de-datos/${query.id}/contratos`
+        );
       }
     }
 

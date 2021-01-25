@@ -32,8 +32,8 @@ class CollectionJobs extends React.Component {
             <div className="mt-2">
               {this.props.results.map((collectionJob) => (
                 <Link
-                  href={`/coleccion-de-datos?id=${collectionJob.id}`}
-                  as={`/colecciones-de-datos/${collectionJob.id}`}
+                  href={`/coleccion-de-datos?id=${collectionJob.id}&type=contract`}
+                  as={`/colecciones-de-datos/${collectionJob.id}/contratos`}
                   key={collectionJob.id.toString()}>
                   <a className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100">
                     <div className="text-xl font-bold text-gray-800">
