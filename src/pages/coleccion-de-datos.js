@@ -1,16 +1,17 @@
 import React from 'react';
+import NProgress from 'nprogress';
+import Router, { withRouter } from 'next/router';
 import Link from 'next/link';
 import Head from '../components/head';
-import { getCollectionJob } from '../lib/api';
+import Pagination from '../components/pagination';
+import { getCollectionJob, getCollectionArtifacts } from '../lib/api';
 import { formatDate } from '../lib/date';
+import { ucfirst } from '../lib/text';
 
 class CollectionArtifactLink extends React.Component {
   render() {
     return (
-      <Link
-        href={this.props.linkHref}
-        as={this.props.linkAs}
-        key={this.props.key}>
+      <Link href={this.props.linkHref} as={this.props.linkAs}>
         <a className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100">
           <div className="grid grid-cols-3">
             <div className="col-span-2 truncate">
@@ -41,7 +42,7 @@ class CollectionArtifact extends React.Component {
       case 'contract': {
         return (
           <CollectionArtifactLink
-            key={this.props.key}
+            key={artifact.data.id.toString()}
             linkHref={`/contrato?slug=${artifact.data.slug}`}
             linkAs={`/contratos/${artifact.data.slug}`}
             text={`${artifact.data.number}${
@@ -54,7 +55,7 @@ class CollectionArtifact extends React.Component {
       case 'contractor': {
         return (
           <CollectionArtifactLink
-            key={this.props.key}
+            key={artifact.data.id.toString()}
             linkHref={`/contratista?slug=${artifact.data.slug}`}
             linkAs={`/contratistas/${artifact.data.slug}`}
             text={artifact.data.name}
@@ -65,7 +66,7 @@ class CollectionArtifact extends React.Component {
       case 'service': {
         return (
           <CollectionArtifactLink
-            key={this.props.key}
+            key={artifact.data.id.toString()}
             linkHref={`/buscar?service=${artifact.data.id}`}
             text={artifact.data.name}
             created={artifact.created}
@@ -75,7 +76,7 @@ class CollectionArtifact extends React.Component {
       case 'entity': {
         return (
           <CollectionArtifactLink
-            key={this.props.key}
+            key={artifact.data.id.toString()}
             linkHref={`/entidad?slug=${artifact.data.slug}`}
             linkAs={`/entidades/${artifact.data.slug}`}
             text={artifact.data.name}
@@ -86,7 +87,7 @@ class CollectionArtifact extends React.Component {
       case 'document': {
         return (
           <CollectionArtifactLink
-            key={this.props.key}
+            key={artifact.data.id.toString()}
             linkHref={artifact.data.source_url}
             text={`Documento ${artifact.data.source_id}`}
             created={artifact.created}
@@ -100,98 +101,217 @@ class CollectionArtifact extends React.Component {
   }
 }
 
+const TYPE_TO_LABEL = {
+  contract: 'contratos',
+  entity: 'entidades',
+  contractor: 'contratistas',
+  service: 'servicios',
+  document: 'documentos',
+};
+
+const LABEL_TO_TYPE = {
+  [TYPE_TO_LABEL.contract]: 'contract',
+  [TYPE_TO_LABEL.entity]: 'entity',
+  [TYPE_TO_LABEL.contractor]: 'contractor',
+  [TYPE_TO_LABEL.service]: 'service',
+  [TYPE_TO_LABEL.document]: 'document',
+};
+
 class CollectionJob extends React.Component {
-  static async getInitialProps({ query }) {
-    let collectionJobId = query.id;
-    return getCollectionJob({ collectionJobId });
+  static async getInitialProps({ res, query }) {
+    let type = LABEL_TO_TYPE[query.type] || query.type;
+
+    if (!query.type) {
+      if (res) {
+        res.writeHead(302, {
+          Location: `/colecciones-de-datos/${query.id}/contratos`,
+        });
+        res.end();
+        return;
+      } else {
+        await Router.push({
+          pathname: '/colecciones-de-datos/[id]/[type]',
+          query: {
+            id: query.id,
+            type: 'contratos',
+          },
+        });
+      }
+    }
+
+    return getCollectionJob({ collectionJobId: query.id, type });
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      type: props.type,
+      artifacts: props.artifacts,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.type !== prevProps.type) {
+      this.setState(Object.assign({}, this.props));
+    }
+  }
+
+  handlePageChange = (type) => {
+    return async ({ page }) => {
+      let artifacts = await getCollectionArtifacts({
+        collectionJobId: this.props.id,
+        type,
+        page,
+      });
+      this.setState({ artifacts });
+      window.scrollTo(0, 0);
+    };
+  };
+
+  handleSectionChange = async ({ type }) => {
+    NProgress.start();
+    this.setState({ type, artifacts: { results: [] } });
+
+    await Router.push(
+      {
+        pathname: `/coleccion-de-datos`,
+        query: { id: this.props.id, type },
+      },
+      `/colecciones-de-datos/${this.props.id}/${TYPE_TO_LABEL[type]}`,
+      { shallow: true }
+    );
+
+    let artifacts = await getCollectionArtifacts({
+      collectionJobId: this.props.id,
+      type,
+    });
+
+    this.setState({ artifacts });
+    NProgress.done();
+  };
+
   render() {
+    let { type, artifacts } = this.state;
     return (
       <div>
         <Head title={`Colección de datos #${this.props.id}`} />
         <div className="flex self-start justify-center">
-          <div className="w-full max-w-3xl mb-4">
-            <div className="mt-2 mb-4">
-              <h2 className="mb-1 text-3xl font-semibold text-gray-800">
-                Colección de datos #{this.props.id}
-              </h2>
-              <p>
-                Contratos otorgados entre{' '}
-                <strong>{formatDate(this.props.date_of_grant_start)}</strong> y{' '}
-                <strong>{formatDate(this.props.date_of_grant_end)}</strong>
-              </p>
-              <p>Procesado: {formatDate(this.props.created_at, 'shortTime')}</p>
-            </div>
+          <div className="w-full mb-4">
+            <div className="flex flex-wrap">
+              <div className="w-full sm:w-1/3 px-4 py-2 border-none border-r sm:border-solid sm:border-gray-200 text-lg text-gray-800">
+                <div className="mt-2 mb-4">
+                  <h2 className="mb-1 text-3xl font-semibold text-gray-800">
+                    Colección de datos #{this.props.id}
+                  </h2>
+                  <p>
+                    Contratos otorgados entre{' '}
+                    <strong>
+                      {formatDate(this.props.date_of_grant_start)}
+                    </strong>{' '}
+                    y{' '}
+                    <strong>{formatDate(this.props.date_of_grant_end)}</strong>
+                  </p>
+                  <p>
+                    Procesado: {formatDate(this.props.created_at, 'shortTime')}
+                  </p>
+                </div>
 
-            <div className="my-8">
-              <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
-                Contratos
-              </h3>
-              {this.props.artifacts
-                .filter((artifact) => artifact.type === 'contract')
-                .map((artifact) => (
-                  <CollectionArtifact
-                    key={artifact.data.id.toString()}
-                    data={artifact}
-                  />
-                ))}
-            </div>
+                <a
+                  className={
+                    'block py-4 border-b border-gray-200 no-underline hover:bg-gray-100 text-2xl font-extrabold text-gray-800 cursor-pointer ' +
+                    (this.props.router.asPath ===
+                      `/colecciones-de-datos/${this.props.id}/contratos` &&
+                      'bg-gray-100')
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleSectionChange({ type: 'contract' });
+                  }}>
+                  Contratos
+                </a>
 
-            <div className="my-8">
-              <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
-                Contratistas
-              </h3>
-              {this.props.artifacts
-                .filter((artifact) => artifact.type === 'contractor')
-                .map((artifact) => (
-                  <CollectionArtifact
-                    key={artifact.data.id.toString()}
-                    data={artifact}
-                  />
-                ))}
-            </div>
+                <a
+                  className={
+                    'block py-4 border-b border-gray-200 no-underline hover:bg-gray-100 text-2xl font-extrabold text-gray-800 cursor-pointer ' +
+                    (this.props.router.asPath ===
+                      `/colecciones-de-datos/${this.props.id}/contratistas` &&
+                      'bg-gray-100')
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleSectionChange({ type: 'contractor' });
+                  }}>
+                  Contratistas
+                </a>
 
-            <div className="my-8">
-              <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
-                Entidades
-              </h3>
-              {this.props.artifacts
-                .filter((artifact) => artifact.type === 'entity')
-                .map((artifact) => (
-                  <CollectionArtifact
-                    key={artifact.data.id.toString()}
-                    data={artifact}
-                  />
-                ))}
-            </div>
+                <a
+                  className={
+                    'block py-4 border-b border-gray-200 no-underline hover:bg-gray-100 text-2xl font-extrabold text-gray-800 cursor-pointer ' +
+                    (this.props.router.asPath ===
+                      `/colecciones-de-datos/${this.props.id}/entidades` &&
+                      'bg-gray-100')
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleSectionChange({ type: 'entity' });
+                  }}>
+                  Entidades
+                </a>
 
-            <div className="my-8">
-              <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
-                Servicios
-              </h3>
-              {this.props.artifacts
-                .filter((artifact) => artifact.type === 'service')
-                .map((artifact) => (
-                  <CollectionArtifact
-                    key={artifact.data.id.toString()}
-                    data={artifact}
-                  />
-                ))}
-            </div>
+                <a
+                  className={
+                    'block py-4 border-b border-gray-200 no-underline hover:bg-gray-100 text-2xl font-extrabold text-gray-800 cursor-pointer ' +
+                    (this.props.router.asPath ===
+                      `/colecciones-de-datos/${this.props.id}/servicios` &&
+                      'bg-gray-100')
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleSectionChange({ type: 'service' });
+                  }}>
+                  Servicios
+                </a>
 
-            <div className="my-8">
-              <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
-                Documentos
-              </h3>
-              {this.props.artifacts
-                .filter((artifact) => artifact.type === 'document')
-                .map((artifact) => (
-                  <CollectionArtifact
-                    key={artifact.data.id.toString()}
-                    data={artifact}
-                  />
-                ))}
+                <a
+                  className={
+                    'block py-4 border-b border-gray-200 no-underline hover:bg-gray-100 text-2xl font-extrabold text-gray-800 cursor-pointer ' +
+                    (this.props.router.asPath ===
+                      `/colecciones-de-datos/${this.props.id}/documentos` &&
+                      'bg-gray-100')
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleSectionChange({ type: 'document' });
+                  }}>
+                  Documentos
+                </a>
+              </div>
+              <div className="w-full sm:w-2/3 px-4 py-2 text-lg text-gray-800">
+                <div className="w-full max-w-3xl mb-4">
+                  <div className="my-8">
+                    <h3 className="mb-1 text-2xl font-extrabold text-gray-800">
+                      {ucfirst(TYPE_TO_LABEL[type])}
+                    </h3>
+                    <div className="mt-2">
+                      {artifacts.results.map((artifact) => (
+                        <CollectionArtifact
+                          key={artifact.data.id.toString()}
+                          data={artifact}
+                        />
+                      ))}
+                    </div>
+                    {artifacts.count > 0 && artifacts.total_pages > 1 ? (
+                      <div className="text-center mt-4">
+                        <Pagination
+                          page={artifacts.page}
+                          pages={artifacts.total_pages}
+                          onPageChange={this.handlePageChange(type)}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -200,4 +320,4 @@ class CollectionJob extends React.Component {
   }
 }
 
-export default CollectionJob;
+export default withRouter(CollectionJob);

@@ -34,6 +34,31 @@ app.prepare().then(() => {
     return app.render(req, res, '/coleccion-de-datos', { id: req.params.id });
   });
 
+  server.get('/colecciones-de-datos/:id/:type', (req, res) => {
+    let type = req.params.type;
+    switch (req.params.type) {
+      case 'contratos':
+        type = 'contract';
+        break;
+      case 'contratistas':
+        type = 'contractor';
+        break;
+      case 'entidades':
+        type = 'entity';
+        break;
+      case 'servicios':
+        type = 'service';
+        break;
+      case 'documentos':
+        type = 'document';
+        break;
+    }
+    return app.render(req, res, '/coleccion-de-datos', {
+      id: req.params.id,
+      type,
+    });
+  });
+
   server.get('/_api/document', (req, res) => {
     // TODO Only proxy expected URLs
     let adapter = req.query.url.startsWith('https') ? https : http;

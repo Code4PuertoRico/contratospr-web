@@ -225,6 +225,19 @@ export async function getCollectionJobs() {
   return fetchData(`${API_URL}/collection-jobs/`);
 }
 
-export async function getCollectionJob({ collectionJobId }) {
-  return fetchData(`${API_URL}/collection-jobs/${collectionJobId}`);
+export async function getCollectionJob({ collectionJobId, type }) {
+  let collectionJob = await fetchData(
+    `${API_URL}/collection-jobs/${collectionJobId}/`
+  );
+
+  let artifacts = await getCollectionArtifacts({ collectionJobId, type });
+
+  return Object.assign({}, collectionJob, { type, artifacts });
+}
+
+export async function getCollectionArtifacts({ collectionJobId, type, page }) {
+  return fetchData(`${API_URL}/collection-jobs/${collectionJobId}/artifacts/`, {
+    type,
+    page,
+  });
 }
