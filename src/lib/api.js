@@ -225,12 +225,12 @@ export async function getCollectionJobs() {
   return fetchData(`${API_URL}/collection-jobs/`);
 }
 
-export async function getCollectionJob({ collectionJobId, type }) {
+export async function getCollectionJob({ collectionJobId, type, page }) {
   let collectionJob = await fetchData(
     `${API_URL}/collection-jobs/${collectionJobId}/`
   );
 
-  let artifacts = await getCollectionArtifacts({ collectionJobId, type });
+  let artifacts = await getCollectionArtifacts({ collectionJobId, type, page });
 
   return Object.assign({}, collectionJob, { type, artifacts });
 }

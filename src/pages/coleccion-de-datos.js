@@ -4,6 +4,7 @@ import Router, { withRouter } from 'next/router';
 import Link from 'next/link';
 import Head from '../components/head';
 import Pagination from '../components/pagination';
+import millify from '../lib/millify';
 import { getCollectionJob, getCollectionArtifacts } from '../lib/api';
 import { formatDate } from '../lib/date';
 import { ucfirst } from '../lib/text';
@@ -15,9 +16,7 @@ class CollectionArtifactLink extends React.Component {
         <a className="block py-4 border-b border-gray-200 no-underline hover:bg-gray-100">
           <div className="grid grid-cols-3">
             <div className="col-span-2 truncate">
-              <div className="inline text-xl font-bold text-gray-800 mr-4">
-                {this.props.text}
-              </div>
+              <div className="mr-4">{this.props.children}</div>
             </div>
             <div className="col-auto text-right">
               <div
@@ -45,11 +44,21 @@ class CollectionArtifact extends React.Component {
             key={artifact.data.id.toString()}
             linkHref={`/contrato?slug=${artifact.data.slug}`}
             linkAs={`/contratos/${artifact.data.slug}`}
-            text={`${artifact.data.number}${
-              artifact.data.amendment ? ` - ${artifact.data.amendment}` : ``
-            }`}
-            created={artifact.created}
-          />
+            created={artifact.created}>
+            <>
+              <div className="text-xl font-bold text-gray-800">
+                {`${artifact.data.number}${
+                  artifact.data.amendment ? ` - ${artifact.data.amendment}` : ``
+                }`}{' '}
+                <span className="text-base text-gray-800">
+                  ${millify(artifact.data.amount_to_pay)}
+                </span>
+              </div>
+              <div className="text-gray-800">
+                Otorgado: {formatDate(artifact.data.date_of_grant)}
+              </div>
+            </>
+          </CollectionArtifactLink>
         );
       }
       case 'contractor': {
@@ -58,9 +67,11 @@ class CollectionArtifact extends React.Component {
             key={artifact.data.id.toString()}
             linkHref={`/contratista?slug=${artifact.data.slug}`}
             linkAs={`/contratistas/${artifact.data.slug}`}
-            text={artifact.data.name}
-            created={artifact.created}
-          />
+            created={artifact.created}>
+            <div className="text-xl font-bold text-gray-800">
+              {artifact.data.name}
+            </div>
+          </CollectionArtifactLink>
         );
       }
       case 'service': {
@@ -69,8 +80,11 @@ class CollectionArtifact extends React.Component {
             key={artifact.data.id.toString()}
             linkHref={`/buscar?service=${artifact.data.id}`}
             text={artifact.data.name}
-            created={artifact.created}
-          />
+            created={artifact.created}>
+            <div className="text-xl font-bold text-gray-800">
+              {artifact.data.name}
+            </div>
+          </CollectionArtifactLink>
         );
       }
       case 'entity': {
@@ -79,9 +93,11 @@ class CollectionArtifact extends React.Component {
             key={artifact.data.id.toString()}
             linkHref={`/entidad?slug=${artifact.data.slug}`}
             linkAs={`/entidades/${artifact.data.slug}`}
-            text={artifact.data.name}
-            created={artifact.created}
-          />
+            created={artifact.created}>
+            <div className="text-xl font-bold text-gray-800">
+              {artifact.data.name}
+            </div>
+          </CollectionArtifactLink>
         );
       }
       case 'document': {
@@ -89,9 +105,11 @@ class CollectionArtifact extends React.Component {
           <CollectionArtifactLink
             key={artifact.data.id.toString()}
             linkHref={artifact.data.source_url}
-            text={`Documento ${artifact.data.source_id}`}
-            created={artifact.created}
-          />
+            created={artifact.created}>
+            <div className="text-xl font-bold text-gray-800">
+              {`Documento ${artifact.data.source_id}`}
+            </div>
+          </CollectionArtifactLink>
         );
       }
       default: {
@@ -139,7 +157,11 @@ class CollectionJob extends React.Component {
       }
     }
 
-    return getCollectionJob({ collectionJobId: query.id, type });
+    return getCollectionJob({
+      collectionJobId: query.id,
+      type,
+      page: query.page,
+    });
   }
 
   constructor(props) {
@@ -164,6 +186,16 @@ class CollectionJob extends React.Component {
         page,
       });
       this.setState({ artifacts });
+
+      await Router.push(
+        {
+          pathname: `/coleccion-de-datos`,
+          query: { id: this.props.id, type, page },
+        },
+        `/colecciones-de-datos/${this.props.id}/${TYPE_TO_LABEL[type]}?page=${page}`,
+        { shallow: true }
+      );
+
       window.scrollTo(0, 0);
     };
   };
