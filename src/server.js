@@ -56,6 +56,7 @@ app.prepare().then(() => {
     return app.render(req, res, '/coleccion-de-datos', {
       id: req.params.id,
       type,
+      page: req.query.page,
     });
   });
 
