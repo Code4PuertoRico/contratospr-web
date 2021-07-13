@@ -10,13 +10,5 @@ module.exports = {
       : DEVELOPMENT_API_URL,
     GA_TRACKING_ID: 'UA-37217294-9',
   },
-  webpack: (config) => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty',
-    };
-
-    return config;
-  },
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 };
