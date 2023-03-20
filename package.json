@@ -14,7 +14,7 @@
     "express": "^4.17.3",
     "isomorphic-unfetch": "^3.1.0",
     "moment": "^2.29.4",
-    "next": "^10.2.3",
+    "next": "^13.2.3",
     "nprogress": "^0.2.0",
     "postcss": "^8.2.13",
     "postcss-import": "^13.0.0",
