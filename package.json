@@ -16,7 +16,7 @@
     "moment": "^2.29.4",
     "next": "^13.2.3",
     "nprogress": "^0.2.0",
-    "postcss": "^8.2.13",
+    "postcss": "^8.4.31",
     "postcss-import": "^13.0.0",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
