@@ -1,8 +1,12 @@
 # contratospr-web
 
+> [!CAUTION] Project has been archived
+> Contratos PR no esta en función y este repositorio a sido archivado. Todavia se puede utilizar pero todo las dependencias
+> no se han mantenido al día.
+
 Web UI for the [ContratosPR API](https://github.com/Code4PuertoRico/contratospr-api), making our scraped data discoverable, searchable, and consumable by everybody, not just those that have specialized knowledge in tech or government.
 
-- URL: https://contratospr.com
+- URL: ~`https://contratospr.com`~
 - Central Repo: https://github.com/code4puertorico/contratospr
 - API Repo https://github.com/code4puertorico/contratospr-api
 
