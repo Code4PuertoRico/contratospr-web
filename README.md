@@ -1,6 +1,8 @@
 # contratospr-web
 
-> [!CAUTION] Project has been archived
+> [!CAUTION]
+> Project has been archived.
+> 
 > Contratos PR no esta en función y este repositorio a sido archivado. Todavia se puede utilizar pero todo las dependencias
 > no se han mantenido al día.
 
